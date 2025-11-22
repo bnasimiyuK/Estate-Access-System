@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athi Estate | Payments</title>
+
+  <!-- Link external CSS file (html.css) -->
+  <link rel="stylesheet" href="css/html.css" />
+
+  <!-- XLSX for Excel/CSV export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+      <div class="header-container">
+          <h1>Athi Estate Payments</h1>
+          <div id="userInfo">Loading User...</div>
+      </div>
+  </header>
+
+  <!-- DASHBOARD SUMMARY -->
+  <section id="dashboardSummary"></section>
+
+  <main>
+
+    <!-- MPESA PAYMENT FORM -->
+    <section>
+      <h2>💳 Initiate MPESA Payment</h2>
+      <div class="form-container">
+          <select id="residentIdSelect">
+              <option value="" disabled selected>Select Resident ID (or enter new)</option>
+          </select>
+          <input type="text" id="serviceNameInput" placeholder="Service Name (e.g., Monthly Dues)" />
+          <input type="number" id="paymentAmountInput" placeholder="Amount (Ksh)" />
+          <input type="text" id="phoneNumberInput" placeholder="Phone (2547XXXXXXXX)" />
+          <button id="payBtn">
+              <span id="payBtnText">Simulate Payment</span>
+          </button>
+          <div id="paymentResult" class="hidden"></div>
+      </div>
+    </section>
+
+    <!-- PAYMENT HISTORY -->
+    <section>
+      <h3>📋 Full Payment History</h3>
+      <div class="table-controls">
+          <input type="text" id="filterInput" placeholder="Filter by Resident ID, Status, or Ref" />
+          <div>
+              <button id="exportCsv">Export CSV</button>
+              <button id="exportExcel">Export Excel</button>
+          </div>
+      </div>
+      <div class="table-wrapper">
+          <table id="paymentsTable">
+              <thead>
+                  <tr>
+                      <th>ID</th>
+                      <th>ResidentID</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Reference</th>
+                      <th>Method</th>
+                      <th>Action</th>
+                      <th>NationalID</th>
+                      <th>Service Name</th>
+                      <th>Phone</th>
+                      <th>Verified Date</th>
+                  </tr>
+              </thead>
+              <tbody id="paymentsBody">
+                  <tr><td colspan="12">Loading payments...</td></tr>
+              </tbody>
+          </table>
+      </div>
+    </section>
+
+    <!-- VERIFIED PAYMENTS -->
+    <section>
+      <h3>✅ Verified Transactions</h3>
+      <div class="table-controls">
+          <input type="text" id="verifiedFilterInput" placeholder="Filter by Resident ID" />
+          <div>
+              <button id="exportVerifiedCsv">Export CSV</button>
+              <button id="exportVerifiedExcel">Export Excel</button>
+          </div>
+      </div>
+      <div class="table-wrapper">
+          <table id="verifiedTable">
+              <thead>
+                  <tr>
+                      <th>ResidentID</th>
+                      <th>Amount</th>
+                      <th>Reference</th>
+                      <th>Verified Date</th>
+                  </tr>
+              </thead>
+              <tbody id="verifiedBody"></tbody>
+          </table>
+      </div>
+    </section>
+
+    <!-- BALANCES -->
+    <section>
+      <h3>💰 Resident Balances Summary</h3>
+      <div class="table-controls">
+          <div></div>
+          <div>
+              <button id="exportBalancesCsv">Export CSV</button>
+              <button id="exportBalancesExcel">Export Excel</button>
+          </div>
+      </div>
+      <div class="table-wrapper">
+          <table id="balanceTable">
+              <thead>
+                  <tr>
+                      <th>ResidentID</th>
+                      <th>Total Paid (Verified)</th>
+                      <th>Total Due (Simulated)</th>
+                      <th>Balance</th>
+                  </tr>
+              </thead>
+              <tbody id="balanceBody"></tbody>
+          </table>
+      </div>
+    </section>
+
+  </main>
+
+<script type="module" src="js/payment.js"></script>
+</body>
+</html>

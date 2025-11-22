@@ -1,0 +1,122 @@
+<!-- Header -->
+<div id="header"></div>
+
+<!-- Main -->
+<main class="flex-1 overflow-auto p-2 max-w-7xl mx-auto grid grid-cols-3 gap-2 text-xs">
+
+  <!-- Make Payment -->
+  <section class="bg-white rounded-xl shadow p-2 col-span-1 flex flex-col">
+    <h2 class="text-indigo-700 font-bold mb-1 text-sm">💳 Make Payment</h2>
+    <form id="makePaymentForm" class="space-y-1 flex-1 flex flex-col justify-between">
+      <div>
+        <label for="residentId" class="block mb-1">Resident ID</label>
+        <select id="residentId" required class="w-full border rounded px-1 py-1 text-xs">
+          <option value="">Select Resident ID</option>
+        </select>
+      </div>
+      <div>
+        <label for="amount" class="block mb-1">Amount (KSh)</label>
+        <input id="amount" type="number" required class="w-full border rounded px-1 py-1 text-xs"/>
+      </div>
+      <div>
+        <label for="PaymentMethod" class="block mb-1">Payment Method</label>
+        <select id="PaymentMethod" required class="w-full border rounded px-1 py-1 text-xs">
+          <option value="">Select</option>
+          <option value="Mpesa">Mpesa</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="Cash">Cash</option>
+        </select>
+      </div>
+      <div>
+        <label for="reference" class="block mb-1">Reference</label>
+        <input id="reference" type="text" placeholder="e.g. MPESA1234" required class="w-full border rounded px-1 py-1 text-xs"/>
+      </div>
+      <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-1 rounded text-xs mt-1">Submit Payment</button>
+    </form>
+    <div id="msg" class="text-gray-700 mt-1 text-xs"></div>
+  </section>
+
+  <!-- Payment History -->
+  <section class="bg-white rounded-xl shadow p-2 col-span-2 flex flex-col">
+    <h3 class="text-indigo-700 font-semibold mb-1 text-sm">📋 Payment History</h3>
+    <div class="overflow-auto max-h-60 border rounded">
+      <table id="paymentsTable" class="min-w-full text-xs">
+        <thead class="bg-indigo-100 text-indigo-800">
+          <tr>
+            <th>Payment ID</th>
+            <th>Resident ID</th>
+            <th>Amount</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+            <th>Reference</th>
+            <th>Method</th>
+            <th>Action</th>
+          </tr>
+          <tr class="bg-indigo-50">
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="0"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="1"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="2"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="3"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="4"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="5"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-indigo-100 border rounded" data-col="6"/></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="paymentsBody" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Verified Payments -->
+  <section class="bg-white rounded-xl shadow p-2 col-span-3 flex flex-col">
+    <h3 class="text-green-700 font-semibold mb-1 text-sm">✅ Verified Payments</h3>
+    <div class="overflow-auto max-h-40 border rounded">
+      <table id="verifiedTable" class="min-w-full text-xs">
+        <thead class="bg-green-100 text-green-800">
+          <tr>
+            <th>Resident</th>
+            <th>Amount</th>
+            <th>Reference</th>
+            <th>Verified Date</th>
+          </tr>
+          <tr class="bg-green-50">
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-green-100 border rounded" data-col="0"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-green-100 border rounded" data-col="1"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-green-100 border rounded" data-col="2"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-green-100 border rounded" data-col="3"/></th>
+          </tr>
+        </thead>
+        <tbody id="verifiedBody" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Balances -->
+  <section class="bg-white rounded-xl shadow p-2 col-span-3 flex flex-col">
+    <h3 class="text-yellow-700 font-semibold mb-1 text-sm">💰 Balances</h3>
+    <div class="overflow-auto max-h-40 border rounded">
+      <table id="balanceTable" class="min-w-full text-xs">
+        <thead class="bg-yellow-100 text-yellow-800">
+          <tr>
+            <th>Resident</th>
+            <th>Total Paid</th>
+            <th>Total Due</th>
+            <th>Balance</th>
+          </tr>
+          <tr class="bg-yellow-50">
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-yellow-100 border rounded" data-col="0"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-yellow-100 border rounded" data-col="1"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-yellow-100 border rounded" data-col="2"/></th>
+            <th><input type="text" class="filter-input w-full text-xs px-1 py-0.5 bg-yellow-100 border rounded" data-col="3"/></th>
+          </tr>
+        </thead>
+        <tbody id="balanceBody" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/payment.js"></script>
+<script src="js/navbar.js"></script>

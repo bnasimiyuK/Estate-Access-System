@@ -1,0 +1,4 @@
+{
+  "jwtSecret": "replace_with_strong_secret",
+  "tokenExpiry": "2h"
+}

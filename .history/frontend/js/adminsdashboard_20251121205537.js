@@ -1,0 +1,131 @@
+// ================================
+// AUTH & LOGOUT
+// ================================
+const token = localStorage.getItem("accessToken");
+if (!token) window.location.href = "/login.html";
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("accessToken");
+    window.location.href = "/login.html";
+});
+
+// ================================
+// SIDEBAR PAGE LOADING
+// ================================
+const sidebarButtons = document.querySelectorAll(".sidebarBtn");
+const mainContentArea = document.getElementById("main-content-area");
+
+async function loadPageIntoMainContent(url) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Failed to load page: ${res.status}`);
+        const html = await res.text();
+        mainContentArea.innerHTML = html;
+
+        // For subsequent (non-initial) dashboard loads (via button click), 
+        // we call the functions directly after innerHTML.
+        if (url.includes("dashboardoverview.html")) {
+            // NOTE: We don't need setTimeout here for subsequent clicks, 
+            // as the initial load issue is bypassed.
+            await loadDashboardSummary(); 
+            await loadAccessChart();
+        }
+    } catch (err) {
+        console.error("Error loading page:", err);
+        mainContentArea.innerHTML = `<div class="p-6 text-red-600 font-bold">Failed to load: ${url}</div>`;
+    }
+}
+
+sidebarButtons.forEach(btn => {
+    btn.addEventListener("click", async () => {
+        sidebarButtons.forEach(b => b.classList.remove("bg-blue-600", "text-white"));
+        btn.classList.add("bg-blue-600", "text-white");
+
+        const page = btn.dataset.target;
+        if (page) loadPageIntoMainContent(page);
+    });
+});
+
+// *** REMOVED: loadPageIntoMainContent("sections/dashboardoverview.html"); ***
+// The initial page load is handled by the index.html content itself.
+
+// ================================
+// VISITOR MANAGEMENT TOGGLE
+// ================================
+const visitorToggle = document.getElementById("visitorManagementToggle");
+const visitorSubMenu = document.getElementById("visitorSubMenu");
+const visitorArrow = document.getElementById("visitorArrow");
+
+visitorToggle.addEventListener("click", () => {
+    visitorSubMenu.classList.toggle("hidden");
+    visitorArrow.classList.toggle("rotate-90");
+});
+
+// ================================
+// SAFE UPDATE HELPER
+// ================================
+const safeUpdate = (id, value, suffix = '') => {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = value + suffix;
+    } else {
+        // This warning should now only appear if an ID is misspelled 
+        // or a sidebar page is missing the element.
+        console.warn(`Element with ID '${id}' not found in the DOM for update.`);
+    }
+};
+
+// ================================
+// DASHBOARD SUMMARY
+// ================================
+
+
+// ================================
+// ACCESS CHART
+// ================================
+async function loadAccessChart() {
+    try {
+        const res = await fetch("http://localhost:4050/api/residents/admin/accesschart", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error(`API Error: ${res.status}`);
+        const data = await res.json();
+
+        const accessChartElement = document.getElementById("accessChart");
+        if (!accessChartElement) return;
+
+        const ctx = accessChartElement.getContext("2d");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: data.days || [],
+                datasets: [{
+                    label: "Access Attempts",
+                    data: data.counts || [],
+                    borderWidth: 2,
+                    tension: 0.4,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.2)',
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+    } catch (err) {
+        console.error("Error loading chart:", err);
+    }
+}
+
+// ================================
+// INITIALIZATION ON PAGE LOAD
+// ================================
+/**
+ * Run this function once on initial page load.
+ * Since the Dashboard Overview content is ALREADY present in index.html, 
+ * we can call the data functions directly without a wrapper or delay.
+ */
+(async function initializeDashboard() {
+    await loadDashboardSummary();
+    await loadAccessChart();
+})();

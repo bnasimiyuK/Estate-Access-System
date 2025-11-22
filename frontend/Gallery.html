@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athi Estate Access Management System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="relative text-white overflow-hidden">
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover -z-10">
+    <source src="assets/Hero.webm" type="video/mp4">
+  </video>
+  <div class="absolute inset-0 bg-black/50 -z-10"></div>
+  <!-- Header -->
+  <header class="flex justify-between items-center px-8 py-4 bg-black/30 backdrop-blur-sm fixed top-0 left-0 right-0 z-40">
+    <a href="home.html" class="flex items-center space-x-3">
+      <div class="w-12 h-12 bg-white/20 rounded-full overflow-hidden border border-white/40">
+        <img src="assets/Logo.png" alt="Athi Estate Logo" class="object-cover w-full h-full">
+      </div>
+      <span class="text-xl font-bold tracking-wide">Athi Highway Estate</span>
+    </a>
+    <nav>
+  <ul class="flex space-x-3">
+    <li><a href="about-us.html" class="hover:text-blue-300">About Us</a></li>
+    <li><a href="contact.html" class="hover:text-blue-300">Contact</a></li>
+    <li><a href="membership.html" class="hover:text-blue-300">Membership</a></li>
+    <li><a href="services.html" class="hover:text-blue-300">Services</a></li>
+    <li><a href="gallery.html" class="hover:text-blue-300">Gallery</a></li>
+    <li><a href="login.html" class="hover:text-blue-300">Login</a></li>
+    <li>
+      <a href="admin.html" 
+         id="adminPortalLink"
+         class="hidden hover:text-blue-300 transition">
+         Admin Portal
+      </a>
+    </li>
+    <li>
+      <a href="UpdateProfile.html"
+         id="updateProfileLink"
+         class="hidden hover:text-blue-300 transition">
+         Update Profile
+      </a>
+    </li>
+    <li><a href="#" id="logoutBtn" class="hidden hover:text-red-400 transition">Logout</a></li>
+    <li id="userName" class="font-bold text-blue-300"></li>
+  </ul>
+</nav>
+  </header>
+  <!-- Hero Section -->
+  <section class="flex flex-col items-center justify-center text-center h-screen px-6 pt-24">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Welcome to Athi Highway Estate</h1>
+    <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl mb-10">
+      A smart and secure community where technology meets tranquility. <br />
+      Manage your access, guests, and more — all from one platform.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button id="openGalleryBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold shadow-lg transition">Gallery</button>
+      <button id="openVideosBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold shadow-lg transition">Video</button>
+      <button id="openEventsBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold shadow-lg transition">Events</button>
+    </div>
+  </section>
+  <!-- Gallery Modal -->
+  <section id="gallerySection" class="hidden fixed inset-0 bg-black/85 backdrop-blur-lg flex flex-col items-center justify-center z-50 p-6">
+    <div class="flex justify-between items-center w-full max-w-6xl mb-4">
+      <h2 class="text-3xl font-semibold">Estate Gallery</h2>
+      <button id="closeGalleryBtn" class="text-red-400 hover:text-red-600 text-3xl font-bold">&times;</button>
+    </div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-w-2xl w-full">
+      <figure class="text-center">
+        <img src="assets/gallery/Clubhouse.jpg" alt="Clubhouse" class="w-40 h-28 object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer mx-auto">
+        <figcaption class="mt-1 text-sm text-gray-300">Clubhouse</figcaption>
+      </figure>
+      <figure class="text-center">
+        <img src="assets/gallery/Orchard.jpg" alt="Orchard" class="w-40 h-28 object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer mx-auto">
+        <figcaption class="mt-1 text-sm text-gray-300">Orchard</figcaption>
+      </figure>
+      <figure class="text-center">
+        <img src="assets/gallery/Mango.jpg" alt="Mango" class="w-40 h-28 object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer mx-auto">
+        <figcaption class="mt-1 text-sm text-gray-300">Mango</figcaption>
+      </figure>
+      <figure class="text-center">
+        <img src="assets/gallery/Orchard1.jpg" alt="Orchard 1" class="w-40 h-28 object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer mx-auto">
+        <figcaption class="mt-1 text-sm text-gray-300">Orchard 1</figcaption>
+      </figure>
+      <!-- Add more images as needed -->
+    </div>
+    <button id="closeGalleryBtnBottom" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition">Close Gallery</button>
+  </section>
+  <!-- Video Modal -->
+  <section id="videoSection" class="hidden fixed inset-0 bg-black/85 backdrop-blur-lg flex flex-col items-center justify-center z-50 p-6">
+    <div class="flex justify-between items-center w-full max-w-6xl mb-4">
+      <h2 class="text-3xl font-semibold">Estate Videos</h2>
+      <button id="closeVideoBtn" class="text-red-400 hover:text-red-600 text-3xl font-bold">&times;</button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl w-full">
+      <video controls class="w-full h-40 rounded-lg shadow-md cursor-pointer">
+        <source src="assets/Hero-video.mp4" type="video/mp4">
+      </video>
+      <video controls class="w-full h-40 rounded-lg shadow-md cursor-pointer">
+        <source src="assets/bg-video.mp4" type="video/mp4">
+      </video>
+    </div>
+    <button id="closeVideoBtnBottom" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition">Close Videos</button>
+  </section>
+  <!-- Events Modal -->
+  <section id="eventsSection" class="hidden fixed inset-0 bg-black/85 backdrop-blur-lg flex flex-col items-center justify-center z-50 p-6">
+    <div class="flex justify-between items-center w-full max-w-6xl mb-4">
+      <h2 class="text-3xl font-semibold">Estate Events</h2>
+      <button id="closeEventsBtn" class="text-red-400 hover:text-red-600 text-3xl font-bold">&times;</button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl w-full">
+      <div class="bg-gray-800/50 p-4 rounded-lg shadow-md text-center">
+        <h3 class="text-lg font-semibold mb-2">Annual Community BBQ</h3>
+        <p class="text-gray-300 text-sm">August 25, 2025 — Meet & greet residents</p>
+      </div>
+      <div class="bg-gray-800/50 p-4 rounded-lg shadow-md text-center">
+        <h3 class="text-lg font-semibold mb-2">Summer Sports Day</h3>
+        <p class="text-gray-300 text-sm">July 10, 2025 — Fun for the whole family</p>
+      </div>
+    </div>
+    <!-- Fullscreen Lightbox Modal -->
+<section id="lightbox" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-60 p-4">
+  <button id="closeLightbox" class="absolute top-6 right-6 text-white text-3xl font-bold">&times;</button>
+  <img id="lightboxImg" src="" alt="Gallery Image" class="max-h-full max-w-full rounded-lg shadow-lg hidden">
+  <video id="lightboxVideo" controls class="max-h-full max-w-full rounded-lg shadow-lg hidden">
+    <source src="" type="video/mp4">
+  </video>
+</section>
+    <button id="closeEventsBtnBottom" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition">Close Events</button>
+  </section>
+  <!-- Scroll to Top Button -->
+  <button id="scrollTopBtn" class="hidden fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 z-50">↑</button>
+  <!-- Footer -->
+  <footer class="text-center py-4 bg-black/40 backdrop-blur-sm fixed bottom-0 left-0 right-0 text-sm">
+    <p>&copy; 2025 Athi Highway Estate. All rights reserved.</p>
+  </footer>
+  <!-- Script -->
+  <script src="js/gallery.js"></script>
+  <script src="js/navbar.js"></script>
+ </body>
+</html>

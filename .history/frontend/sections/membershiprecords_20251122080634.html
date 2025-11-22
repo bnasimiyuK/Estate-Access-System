@@ -1,0 +1,46 @@
+<div class="bg-white rounded-xl border border-gray-300 shadow-md p-6 overflow-x-auto mb-6">
+  <h2 class="text-xl font-semibold text-blue-800 mb-3">Membership Requests</h2>
+
+  <div class="flex flex-wrap items-center gap-4 mb-4">
+    <select id="requestIdFilter" class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring focus:border-blue-500">
+      <option value="">All Request IDs</option>
+    </select>
+
+    <select id="residentFilter" class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring focus:border-blue-500">
+      <option value="">All Residents</option>
+    </select>
+
+    <select id="statusFilter" class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring focus:border-blue-500">
+      <option value="">All Status</option>
+      <option value="Pending">Pending</option>
+      <option value="Approved">Approved</option>
+      <option value="Rejected">Rejected</option>
+    </select>
+
+    <button id="clearFilterBtn" class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">
+      Clear Filters
+    </button>
+  </div>
+
+  <p>Total Records: <span id="membershipCount">0</span></p>
+
+  <table class="w-full text-sm text-left">
+    <thead>
+      <tr class="bg-blue-700 text-white">
+        <th class="px-4 py-3">RequestID</th>
+        <th class="px-4 py-3">ResidentName</th>
+        <th class="px-4 py-3">NationalID</th>
+        <th class="px-4 py-3">PhoneNumber</th>
+        <th class="px-4 py-3">Email</th>
+        <th class="px-4 py-3">HouseNumber</th>
+        <th class="px-4 py-3">CourtName</th>
+        <th class="px-4 py-3">RoleName</th>
+        <th class="px-4 py-3">Status</th>
+        <th class="px-4 py-3">RequestedAt</th>
+        <th class="px-4 py-3">ApprovedAt</th>
+        <th class="px-4 py-3 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="membershipTableBody" class="text-gray-700"></tbody>
+  </table>
+</div>

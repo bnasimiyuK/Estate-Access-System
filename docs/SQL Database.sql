@@ -1,0 +1,206 @@
+CREATE DATABASE EstateAccessManagementSystem;
+GO
+
+USE EstateAccessManagementSystem;
+GO
+--Roles Table
+CREATE TABLE Roles (
+    RoleID INT IDENTITY(1,1) PRIMARY KEY,
+    RoleName VARCHAR(50) UNIQUE NOT NULL
+);
+
+INSERT INTO Roles (RoleName)
+VALUES ('Admin'), ('Resident'), ('Security'), ('Visitor');
+
+CREATE TABLE Users (
+    UserID INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL,
+    RoleID INT FOREIGN KEY REFERENCES Roles(RoleID),
+    FullName VARCHAR(100),
+    Status VARCHAR(20) DEFAULT 'Active'
+);
+-- Residents table (as before)
+CREATE TABLE Residents (
+    ResidentID INT IDENTITY(1,1) PRIMARY KEY,
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
+    FullName VARCHAR(150) NOT NULL,
+    NationalID VARCHAR(50) UNIQUE NOT NULL,
+    HouseNumber VARCHAR(50),
+    Occupation VARCHAR(100),
+    DateJoined DATETIME DEFAULT GETDATE(),
+    Status VARCHAR(50) DEFAULT 'Active'
+);
+GO
+
+-- Add trigger to enforce allowed roles
+CREATE TRIGGER trg_Residents_ValidateRole
+ON Residents
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        JOIN Users u ON i.UserID = u.UserID
+        JOIN Roles r ON u.RoleID = r.RoleID
+        WHERE r.RoleName NOT IN ('Admin', 'Resident')
+    )
+    BEGIN
+        RAISERROR('Residents can only be linked to users with Admin or Resident roles.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;
+GO
+
+--Users Table (System Logins for Admin/Security)
+
+--Visitors Table
+CREATE TABLE Visitors (
+    VisitorID INT IDENTITY(1,1) PRIMARY KEY,
+    ResdentName VARCHAR(100) NOT NULL,
+    NationalID VARCHAR(20),
+    PhoneNumber VARCHAR(15),
+    VehicleNumber VARCHAR(20),
+    Purpose VARCHAR(255),
+    DateOfVisit DATETIME DEFAULT GETDATE()
+
+);
+
+--GroupAccess Table
+CREATE TABLE GroupAccess (
+    GroupID INT IDENTITY(1,1) PRIMARY KEY,
+    GroupName VARCHAR(100) NOT NULL,
+    Purpose VARCHAR(255),
+    VisitDate DATE,
+    HostID INT FOREIGN KEY REFERENCES Residents(ResidentID),
+    Members TEXT,
+    Status VARCHAR(20) DEFAULT 'Pending', -- Pending, Approved, Rejected
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+--MembershipRequests Table
+CREATE TABLE MembershipRequests (
+    RequestID INT IDENTITY(1,1) PRIMARY KEY,
+    ResidentName VARCHAR(100) NOT NULL,
+    NationalID VARCHAR(20) UNIQUE,
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100),
+    HouseNumber VARCHAR(20),
+    CourtName VARCHAR(50),
+    Status VARCHAR(20) DEFAULT 'Pending', -- Pending, Approved, Rejected
+    RequestedAt DATETIME DEFAULT GETDATE()
+);
+
+--Payments Table
+CREATE TABLE Payments (
+    PaymentID INT IDENTITY(1,1) PRIMARY KEY,
+    ResidentID INT FOREIGN KEY REFERENCES Residents(ResidentID),
+    Amount DECIMAL(10,2) NOT NULL,
+    PaymentType VARCHAR(50), -- Rent, Maintenance, Event Fee, etc.
+    PaymentDate DATETIME DEFAULT GETDATE(),
+    Status VARCHAR(20) DEFAULT 'Completed'
+);
+
+--Announcements Table
+CREATE TABLE Announcements (
+    AnnouncementID INT IDENTITY(1,1) PRIMARY KEY,
+    Title VARCHAR(150) NOT NULL,
+    Message TEXT NOT NULL,
+    CreatedBy INT FOREIGN KEY REFERENCES Users(UserID),
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    ExpiryDate DATETIME NULL
+);
+
+--SecurityLogs Table
+CREATE TABLE SecurityLogs (
+    LogID INT IDENTITY(1,1) PRIMARY KEY,
+    SecurityID INT FOREIGN KEY REFERENCES Users(UserID),
+    ResidentID INT NULL FOREIGN KEY REFERENCES Residents(ResidentID),
+    VisitorID INT NULL FOREIGN KEY REFERENCES Visitors(VisitorID),
+    Action VARCHAR(100), -- Entry, Exit, Pass Verification, etc.
+    Timestamp DATETIME DEFAULT GETDATE(),
+    Remarks TEXT
+);
+
+--VisitorPasses Table
+CREATE TABLE VisitorPasses (
+    PassID INT IDENTITY(1,1) PRIMARY KEY,
+    VisitorID INT FOREIGN KEY REFERENCES Visitors(VisitorID),
+    HostID INT FOREIGN KEY REFERENCES Residents(ResidentID),
+    QRCode VARCHAR(255), -- Optional: store encoded access token
+    IssueDate DATETIME DEFAULT GETDATE(),
+    ExpiryDate DATETIME,
+    Status VARCHAR(20) DEFAULT 'Active' -- Active, Expired, Revoked
+);
+--AccessLogs Table (optional but recommended)
+CREATE TABLE AccessLogs (
+    AccessID INT IDENTITY(1,1) PRIMARY KEY,
+    UserType VARCHAR(20), -- Resident, Visitor, Group
+    UserID INT,
+    Action VARCHAR(50), -- Entry or Exit
+    GateName VARCHAR(50),
+    TimeStamp DATETIME DEFAULT GETDATE()
+);
+
+Relationships Overview
+Table Linked To Relationship
+Residents Roles Many-to-One
+Users Roles Many-to-One
+GroupAccess Residents Many-to-One
+Payments Residents Many-to-One
+Announcements Users Many-to-One
+SecurityLogs Users, Residents, Visitors Many-to-One
+VisitorPasses Visitors, Residents Many-to-One
+AccessLogs Multiple user types Flexible
+
+
+--Verify Tables-To confirm all tables were created:
+
+SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG = 'EstateAccessManagementSystem';
+
+--Populate with Initial Data
+-- Insert default admin
+INSERT INTO Users (Username, PasswordHash, RoleID, FullName, Status, Email)
+VALUES ('admin', '$2a$10$1cL6Rr...', 1, 'Admin User', 'Active', 'admin@estate.com');
+
+INSERT INTO Users (Username, PasswordHash, RoleID, FullName, Status, Email)
+VALUES ('resident1', '$2a$10$3dM9K...', 2, 'Resident One', 'Active', 'resident1@estate.com');
+
+INSERT INTO Users (Username, PasswordHash, RoleID, FullName, Status, Email)
+VALUES ('guard', '$2a$10$ZqT1f...', 3, 'Security Guard', 'Active', 'guard@estate.com');
+
+
+--hashedPassword
+Admin User | admin@estate.com | $2a$10$lrsT3vreDHoC2KHbucT/3.uW/.HuxQADn4baMyf2Sruxn4YUtVUGy
+Resident One | resident1@estate.com | $2a$10$dI93EejHlzmtC7frVRdWkuggwmg9vN7OG4LQ94oo.4aGUvCzkxeY.
+Security Guard | guard@estate.com | $2a$10$Od6/VXaGlgxZWWGYuLcHJuQ0VaRApYiXHzgXA.kYzqErMZhyTB0K.
+
+--Verify Data
+SELECT
+    U.UserID,
+    U.Username,
+    U.FullName,
+    R.RoleName,
+    U.Status
+FROM Users U
+JOIN Roles R ON U.RoleID = R.RoleID;
+
+--Insert into Residents
+-- Insert residents (Admin + Resident roles only)
+INSERT INTO Residents (UserID, FullName, NationalID, HouseNumber, DateJoined, Status)
+VALUES
+-- Admins
+(1, 'Beverlyne Kong'ani', '11112222', 'Riverside_B520', GETDATE(), 'Active'),
+(2, 'Judy Odongo', '11113333', 'Simba_Court_B_A20', GETDATE(), 'Active'),
+
+-- Residents
+(3, 'Isaac Nzioka', '22223333', 'Riverside_B12', GETDATE(), 'Active'),
+(4, 'Eric Mwangi', '33334444', 'Baraka_C20', GETDATE(), 'Active'),
+(5, 'Regina Hosea', '44445555', 'D09', GETDATE(), 'Inactive');
+GO
+--Command to view all rows in the Residents table
+SELECT * FROM Residents;

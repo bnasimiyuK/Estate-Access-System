@@ -1,0 +1,34 @@
+{
+    "sourceFile": "backend/routes/membershiprecordsRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1763669032639,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763669176602,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,19 +13,19 @@\n \r\n const router = express.Router();\r\n \r\n // 🔁 Sync membership requests → records\r\n-router.post(\"/sync\", syncMembershipRecords);\r\n+router.post(\"/sync\", verifyToken, verifyAdmin, syncMembershipRecords);\r\n \r\n // 📋 Get all membership records\r\n router.get(\"/all\", getAllMembershipRecords);\r\n \r\n // ✅ Approve a membership record\r\n-router.put(\"/approve/:id\", verifyToken, approveMembershipRecord);\r\n+router.put(\"/approve/:id\", verifyToken, verifyAdmin, approveMembershipRecord);\r\n \r\n // ❌ Reject a membership record\r\n-router.put(\"/reject/:id\", verifyToken, rejectMembershipRecord);\r\n+router.put(\"/reject/:id\", verifyToken, verifyAdmin, rejectMembershipRecord);\r\n \r\n // 🗑️ Delete a membership record\r\n-router.delete(\"/delete/:id\", verifyToken, deleteMembershipRecord);\r\n+router.delete(\"/delete/:id\", verifyToken, verifyAdmin, deleteMembershipRecord);\r\n \r\n export default router;\r\n"
+                },
+                {
+                    "date": 1763669188407,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,20 +12,20 @@\n import { verifyToken, verifyAdmin } from \"../middleware/authMiddleware.js\";\r\n \r\n const router = express.Router();\r\n \r\n-// 🔁 Sync membership requests → records\r\n+// Sync membership requests → records\r\n router.post(\"/sync\", verifyToken, verifyAdmin, syncMembershipRecords);\r\n \r\n-// 📋 Get all membership records\r\n+// Get all membership records\r\n router.get(\"/all\", getAllMembershipRecords);\r\n \r\n-// ✅ Approve a membership record\r\n+//Approve a membership record\r\n router.put(\"/approve/:id\", verifyToken, verifyAdmin, approveMembershipRecord);\r\n \r\n-// ❌ Reject a membership record\r\n+// Reject a membership record\r\n router.put(\"/reject/:id\", verifyToken, verifyAdmin, rejectMembershipRecord);\r\n \r\n-// 🗑️ Delete a membership record\r\n+// Delete a membership record\r\n router.delete(\"/delete/:id\", verifyToken, verifyAdmin, deleteMembershipRecord);\r\n \r\n export default router;\r\n"
+                },
+                {
+                    "date": 1763670009187,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n // Sync membership requests → records\r\n router.post(\"/sync\", verifyToken, verifyAdmin, syncMembershipRecords);\r\n \r\n // Get all membership records\r\n-router.get(\"/all\", getAllMembershipRecords);\r\n+router.get(\"/all\", verifyToken, verifyAdmin, getAllMembershipRecords);\r\n \r\n //Approve a membership record\r\n router.put(\"/approve/:id\", verifyToken, verifyAdmin, approveMembershipRecord);\r\n \r\n"
+                },
+                {
+                    "date": 1763779947080,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,30 +2,42 @@\n // backend/routes/membershiprecordsRoutes.js\r\n // ==========================================\r\n import express from \"express\";\r\n import {\r\n-  syncMembershipRecords,\r\n-  getAllMembershipRecords,\r\n-  approveMembershipRecord,\r\n-  rejectMembershipRecord,\r\n-  deleteMembershipRecord,\r\n+    syncMembershipRecords,\r\n+    getAllMembershipRecords, // Added from the second block\r\n+    getPendingRequests,     // 👈 ADDED (Used by the dashboard)\r\n+    getApprovedResidents,   // 👈 ADDED (Used by the dashboard)\r\n+    approveMembershipRecord,\r\n+    rejectMembershipRecord,\r\n+    deleteMembershipRecord,\r\n } from \"../controllers/membershiprecordsController.js\";\r\n import { verifyToken, verifyAdmin } from \"../middleware/authMiddleware.js\";\r\n \r\n const router = express.Router();\r\n \r\n+// --- NEW DASHBOARD FETCH ROUTES ---\r\n+\r\n+// Get pending membership requests (for top table)\r\n+router.get(\"/requests/pending\", verifyToken, verifyAdmin, getPendingRequests); // 👈 NEW\r\n+\r\n+// Get approved residents (for bottom table)\r\n+router.get(\"/residents/approved\", verifyToken, verifyAdmin, getApprovedResidents); // 👈 NEW\r\n+\r\n+// --- EXISTING ADMINISTRATIVE ROUTES ---\r\n+\r\n // Sync membership requests → records\r\n router.post(\"/sync\", verifyToken, verifyAdmin, syncMembershipRecords);\r\n \r\n-// Get all membership records\r\n+// Get all membership records (General Admin View)\r\n router.get(\"/all\", verifyToken, verifyAdmin, getAllMembershipRecords);\r\n \r\n-//Approve a membership record\r\n+// Approve a membership record\r\n router.put(\"/approve/:id\", verifyToken, verifyAdmin, approveMembershipRecord);\r\n \r\n // Reject a membership record\r\n router.put(\"/reject/:id\", verifyToken, verifyAdmin, rejectMembershipRecord);\r\n \r\n // Delete a membership record\r\n router.delete(\"/delete/:id\", verifyToken, verifyAdmin, deleteMembershipRecord);\r\n \r\n-export default router;\r\n+export default router;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1763669032639,
+            "name": "Commit-0",
+            "content": "// ==========================================\r\n// backend/routes/membershiprecordsRoutes.js\r\n// ==========================================\r\nimport express from \"express\";\r\nimport {\r\n  syncMembershipRecords,\r\n  getAllMembershipRecords,\r\n  approveMembershipRecord,\r\n  rejectMembershipRecord,\r\n  deleteMembershipRecord,\r\n} from \"../controllers/membershiprecordsController.js\";\r\nimport { verifyToken, verifyAdmin } from \"../middleware/authMiddleware.js\";\r\n\r\nconst router = express.Router();\r\n\r\n// 🔁 Sync membership requests → records\r\nrouter.post(\"/sync\", syncMembershipRecords);\r\n\r\n// 📋 Get all membership records\r\nrouter.get(\"/all\", getAllMembershipRecords);\r\n\r\n// ✅ Approve a membership record\r\nrouter.put(\"/approve/:id\", verifyToken, approveMembershipRecord);\r\n\r\n// ❌ Reject a membership record\r\nrouter.put(\"/reject/:id\", verifyToken, rejectMembershipRecord);\r\n\r\n// 🗑️ Delete a membership record\r\nrouter.delete(\"/delete/:id\", verifyToken, deleteMembershipRecord);\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

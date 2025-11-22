@@ -1,0 +1,77 @@
+<div id="header" class="w-full bg-blue-900 text-white py-3 text-center">
+  <h1 class="text-lg font-semibold">Athi Estate Access Management System</h1>
+  <p class="text-sm mt-1">
+    Total Membership Requests: <span id="membershipCount" class="font-bold">0</span>
+  </p>
+</div>
+
+<video autoplay muted loop playsinline class="fixed top-0 left-0 w-full h-full object-cover -z-10">
+  <source src="assets/Hero.webm" type="video/webm" />
+</video>
+<div class="absolute inset-0 bg-black/50 -z-10"></div>
+
+<main class="flex flex-col justify-center items-center pt-12 pb-20 gap-8">
+
+  <!-- Membership Request Form -->
+  <div class="max-w-md w-full p-8 text-sm bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl">
+    <h2 class="text-lg font-semibold mb-4 text-center text-blue-800">Membership Request</h2>
+    <form id="membershipForm" class="space-y-4">
+      <input type="text" name="ResidentName" placeholder="ResidentName" required class="input-field" />
+      <input type="text" name="NationalID" placeholder="NationalID" required class="input-field" />
+      <input type="text" name="PhoneNumber" placeholder="PhoneNumber" required class="input-field" />
+      <input type="email" name="Email" placeholder="Email" required class="input-field" />
+      <input type="text" name="HouseNumber" placeholder="HouseNumber" required class="input-field" />
+      <input type="text" name="CourtName" placeholder="CourtName" required class="input-field" />
+      <label for="RoleName" class="block text-sm font-medium text-gray-700">Select Role</label>
+      <select id="RoleName" name="RoleName" required class="input-field">
+        <option value="Resident">Resident</option>
+        <option value="Admin">Admin</option>
+        <option value="Security">Security</option>
+        <option value="Visitor">Visitor</option>
+      </select>
+      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-lg font-medium transition">
+        Submit Request
+      </button>
+    </form>
+
+    <p id="feedbackMessage" class="mt-3 text-sm text-center"></p>
+    <p class="mt-4 text-xs text-center text-gray-600">
+      Already a member? <a href="login.html" class="text-blue-700 hover:underline">Login</a>
+    </p>
+  </div>
+
+  <!-- Membership Requests Table -->
+  <div class="overflow-x-auto w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-4">
+    <h2 class="text-lg font-semibold mb-4 text-center text-blue-800">Membership Requests</h2>
+    <table class="min-w-full border border-gray-300 text-sm">
+      <thead class="bg-blue-100">
+        <tr>
+          <th class="border px-2 py-1">RequestID</th>
+          <th class="border px-2 py-1">Resident Name</th>
+          <th class="border px-2 py-1">NationalID</th>
+          <th class="border px-2 py-1">PhoneNumber</th>
+          <th class="border px-2 py-1">Email</th>
+          <th class="border px-2 py-1">HouseNumber</th>
+          <th class="border px-2 py-1">CourtName</th>
+          <th class="border px-2 py-1">Role</th>
+          <th class="border px-2 py-1">RequestedAt</th>
+          <th class="border px-2 py-1">Status</th>
+        </tr>
+      </thead>
+      <tbody id="membershipTableBody">
+        <tr>
+          <td colspan="10" class="text-center p-2 text-gray-500">No membership requests found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="fixed bottom-0 left-0 w-full bg-blue-900/90 text-white text-center py-2 text-xs">
+  <p>&copy; <span id="year"></span> Athi Estate Access System. All rights reserved.</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>

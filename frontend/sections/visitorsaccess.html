@@ -1,0 +1,104 @@
+<div id="header"></div>
+
+<!-- Tabs -->
+<div class="flex justify-center mt-4 gap-4">
+  <button id="tabRegister" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Visitor Registration</button>
+  <button id="tabPending" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Pending Approvals</button>
+</div>
+
+<main class="p-4 max-w-6xl mx-auto mt-4">
+
+  <!-- Visitor Registration -->
+  <section id="registerSection">
+    <h2 class="text-lg font-bold mb-4">Register Visitor</h2>
+    <form id="visitorForm" class="space-y-3 bg-white p-4 rounded shadow">
+
+      <div>
+        <label>Registration Type:</label>
+        <select id="registrationType" class="border p-1 rounded">
+          <option value="single">Single Visitor</option>
+          <option value="group">Group Visit</option>
+        </select>
+      </div>
+
+      <div id="visitorContainer">
+        <div class="visitor-entry border p-3 rounded mb-3 bg-gray-50">
+          <label>Visitor Name</label>
+          <input type="text" name="VisitorName" class="input-box border p-1 w-full" required />
+
+          <label>National ID</label>
+          <input type="text" name="NationalID" class="input-box border p-1 w-full" required />
+
+          <label>Phone Number</label>
+          <input type="text" name="PhoneNumber" class="input-box border p-1 w-full" required />
+
+          <label>Vehicle Number</label>
+          <input type="text" name="VehicleNumber" class="input-box border p-1 w-full" />
+
+          <label>Purpose</label>
+          <textarea name="Purpose" class="input-box border p-1 w-full" rows="2" required></textarea>
+
+          <label>Date of Visit</label>
+          <input type="datetime-local" name="DateOfVisit" class="input-box border p-1 w-full" required />
+
+          <button type="button" class="removeVisitorBtn bg-red-500 text-white px-2 py-0.5 rounded mt-1 hover:bg-red-600 hidden">Remove</button>
+        </div>
+      </div>
+
+      <button type="button" id="addVisitorBtn" class="hidden bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+        ➕ Add Another Visitor
+      </button>
+
+      <div class="pt-2">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700">Submit</button>
+      </div>
+
+    </form>
+    <p id="msgRegister" class="mt-2 text-center text-red-600"></p>
+  </section>
+
+  <!-- Pending Approvals -->
+  <section id="pendingSection" class="hidden mt-8">
+    <h2 class="text-lg font-bold mb-4">Pending Visitor Approvals</h2>
+    <table class="min-w-full border border-gray-300">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="py-2 px-3 border">Visitor Name</th>
+          <th class="py-2 px-3 border">Resident Name</th>
+          <th class="py-2 px-3 border">House</th>
+          <th class="py-2 px-3 border">Date of Visit</th>
+          <th class="py-2 px-3 border">Status</th>
+          <th class="py-2 px-3 border">Approvers</th>
+          <th class="py-2 px-3 border">Action</th>
+        </tr>
+      </thead>
+      <tbody id="requestsTable" class="bg-white"></tbody>
+    </table>
+    <p id="msgPending" class="mt-4 text-center text-sm"></p>
+  </section>
+
+  <!-- Approved Visitors -->
+  <section id="approvedSection" class="mt-8">
+    <h2 class="text-lg font-bold mb-4">Approved Visitors</h2>
+    <table class="min-w-full border border-gray-300">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="py-2 px-3 border">Visitor Name</th>
+          <th class="py-2 px-3 border">Resident Name</th>
+          <th class="py-2 px-3 border">House</th>
+          <th class="py-2 px-3 border">Date of Visit</th>
+          <th class="py-2 px-3 border">Access Code</th>
+          <th class="py-2 px-3 border">Allowed Visitors Count</th>
+          <th class="py-2 px-3 border">Level1 Approved By</th>
+          <th class="py-2 px-3 border">Level2 Approved By</th>
+        </tr>
+      </thead>
+      <tbody id="approvedTableBody" class="bg-white"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<!-- Scripts -->
+<script src="js/visitorsaccess.js"></script>
+<script src="js/navbar.js"></script>

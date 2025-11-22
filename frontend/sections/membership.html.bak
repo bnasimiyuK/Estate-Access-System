@@ -1,0 +1,43 @@
+<div class="max-w-4xl mx-auto">
+
+  <!-- RESIDENT FORM -->
+  <div id="residentFormSection" class="bg-white p-6 rounded shadow mb-6">
+    <h2 class="text-2xl font-bold mb-4">Submit Membership Request</h2>
+    <form id="membershipForm" class="space-y-4">
+      <input type="text" name="ResidentName" placeholder="Full Name" class="w-full p-2 border rounded" required />
+      <input type="text" name="NationalID" placeholder="National ID" class="w-full p-2 border rounded" required />
+      <input type="text" name="PhoneNumber" placeholder="Phone Number" class="w-full p-2 border rounded" required />
+      <input type="email" name="Email" placeholder="Email" class="w-full p-2 border rounded" required />
+      <input type="text" name="HouseNumber" placeholder="House Number" class="w-full p-2 border rounded" required />
+      <input type="text" name="CourtName" placeholder="Court Name" class="w-full p-2 border rounded" required />
+      <input type="text" name="Action" placeholder="Action (optional)" class="w-full p-2 border rounded" />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
+    </form>
+    <p id="feedbackMessage" class="mt-3"></p>
+  </div>
+
+  <!-- ADMIN TABLE -->
+  <div id="adminTableSection" class="bg-white p-6 rounded shadow hidden">
+    <h2 class="text-2xl font-bold mb-4">Membership Requests (Admin)</h2>
+    <table class="w-full table-auto border-collapse">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border px-2 py-1">ID</th>
+          <th class="border px-2 py-1">Name</th>
+          <th class="border px-2 py-1">NationalID</th>
+          <th class="border px-2 py-1">Phone</th>
+          <th class="border px-2 py-1">Email</th>
+          <th class="border px-2 py-1">House</th>
+          <th class="border px-2 py-1">Court</th>
+          <th class="border px-2 py-1">Status</th>
+          <th class="border px-2 py-1">Action</th>
+          <th class="border px-2 py-1">Operations</th>
+        </tr>
+      </thead>
+      <tbody id="adminTableBody"></tbody>
+    </table>
+    <button id="syncRecordsBtn" class="mt-4 bg-green-600 text-white px-4 py-2 rounded">Sync Records</button>
+    <p id="adminFeedback" class="mt-3"></p>
+  </div>
+
+</div>

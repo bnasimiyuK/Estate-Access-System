@@ -1,0 +1,163 @@
+console.log("membershiprecords.js loaded");
+const API_BASE = "http://localhost:4050/api/membership";
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("Loading membership records...");
+  const tableBody = document.getElementById("membershipTableBody");
+  const msg = document.getElementById("msg");
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  // Check login token
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Please log in again.");
+    window.location.href = "login.html";
+    return;
+  }
+  async function loadMembershipRecords() {
+    console.log("Fetching membership records...");
+    try {
+      msg.textContent = "Loading membership records...";
+      const response = await fetch(`${API_BASE}/all`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 401) {
+        window.location.href = "login.html";
+        return;
+      }
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      const data = await response.json();
+      const records = Array.isArray(data.records) ? data.records : [];
+      tableBody.innerHTML = "";
+      if (!records.length) {
+        msg.textContent = "No membership records found.";
+        updateUIStats([]);
+        return;
+      }
+        records.forEach((rec) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${rec.RequestID}</td>
+          <td>${rec.ResidentName || "-"}</td>
+          <td>${rec.NationalID || "-"}</td>
+          <td>${rec.PhoneNumber || "-"}</td>
+          <td>${rec.Email || "-"}</td>
+          <td>${rec.HouseNumber || "-"}</td>
+          <td>${rec.CourtName || "-"}</td>
+          <td>${rec.RoleName || "-"}</td>
+          <td class="${
+            rec.Status === "Approved"
+              ? "text-green-600"
+              : rec.Status === "Rejected"
+              ? "text-red-600"
+              : "text-yellow-600"
+          } font-semibold">${rec.Status}</td>
+          <td>${formatDate(rec.RequestedAt)}</td>
+          <td class="text-center">
+            <button class="approveBtn" data-id="${rec.RequestID}">Approve</button>
+            <button class="rejectBtn" data-id="${rec.RequestID}">Reject</button>
+            <button class="deleteBtn" data-id="${rec.RequestID}">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      msg.textContent = `Loaded ${records.length} record(s).`;
+      updateUIStats(records);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      msg.textContent = "Error loading records.";
+      updateUIStats([]);
+    }
+  }
+  async function updateMembership(action, id) {
+    try {
+      const endpoints = {
+        approve: `${API_BASE}/approve/${id}`,
+        reject: `${API_BASE}/reject/${id}`,
+        delete: `${API_BASE}/delete/${id}`,
+      };
+      const method = action === "delete" ? "DELETE" : "PUT";
+      const response = await fetch(endpoints[action], {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (!data.success) {
+        msg.textContent = `Failed: ${data.message || "Server error"}`;
+        return;
+      }
+      msg.textContent = `${action.toUpperCase()} successful for ID ${id}`;
+      console.log(`Syncing tables after ${action}...`);
+      await syncMembershipRecords();
+      // Reload records
+      await loadMembershipRecords();
+    } catch (err) {
+      console.error(`Error performing ${action}:`, err);
+      msg.textContent = "Could not update record.";
+    }
+  }
+  async function syncMembershipRecords() {
+    try {
+      const response = await fetch(`${API_BASE}/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      const data = await response.json();
+      if (data.success) {
+        console.log("MembershipRecords synced successfully.");
+      } else {
+        console.warn("Sync failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Sync error:", err);
+    }
+  }
+  function formatDate(datetime) {
+    return datetime ? new Date(datetime).toLocaleString() : "-";
+  }
+  function updateUIStats(records) {
+    try {
+      const countEl = document.getElementById("membershipCount");
+      if (countEl) countEl.textContent = records.length || 0;
+      const statusLabel = document.getElementById("statusLabel");
+      if (statusLabel) {
+        const approved = records.filter((r) => r.Status === "Approved").length;
+        const pending = records.filter((r) => r.Status === "Pending").length;
+        const rejected = records.filter((r) => r.Status === "Rejected").length;
+        statusLabel.textContent = `Approved: ${approved} | Pending: ${pending} | Rejected: ${rejected}`;
+      }
+      const actionText = document.getElementById("actionText");
+      if (actionText) {
+        const latest = records[0]?.RequestedAt
+          ? new Date(records[0].RequestedAt).toLocaleString()
+          : "N/A";
+        actionText.textContent = `Last Updated: ${latest}`;
+      }
+    } catch (err) {
+      console.error("Error updating UI stats:", err);
+    }
+  }
+  document.addEventListener("click", async (e) => {
+    const { target } = e;
+    if (target.classList.contains("approveBtn")) {
+      await updateMembership("approve", target.dataset.id);
+    } else if (target.classList.contains("rejectBtn")) {
+      await updateMembership("reject", target.dataset.id);
+    } else if (target.classList.contains("deleteBtn")) {
+      if (confirm("Are you sure you want to delete this record?")) {
+        await updateMembership("delete", target.dataset.id);
+      }
+    }
+  });
+  await syncMembershipRecords();
+  await loadMembershipRecords();
+});

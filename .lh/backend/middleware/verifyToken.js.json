@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/middleware/verifyToken.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763782439477,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763782904110,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,12 @@\n-// backend/middleware/verifyToken.js\r\n+// backend/middleware/authenticateJWT.js\r\n import jwt from \"jsonwebtoken\";\r\n import dotenv from \"dotenv\";\r\n dotenv.config();\r\n \r\n const JWT_SECRET = process.env.JWT_SECRET || \"supersecretkey\";\r\n \r\n-export const verifyToken = (req, res, next) => {\r\n+export const authenticateJWT = (req, res, next) => {\r\n     // 1. Check for Preflight Request and let it proceed\r\n     if (req.method === 'OPTIONS') {\r\n         return next(); // Allows the request to hit the CORS middleware below\r\n     }\r\n"
+                }
+            ],
+            "date": 1763782439477,
+            "name": "Commit-0",
+            "content": "// backend/middleware/verifyToken.js\r\nimport jwt from \"jsonwebtoken\";\r\nimport dotenv from \"dotenv\";\r\ndotenv.config();\r\n\r\nconst JWT_SECRET = process.env.JWT_SECRET || \"supersecretkey\";\r\n\r\nexport const verifyToken = (req, res, next) => {\r\n    // 1. Check for Preflight Request and let it proceed\r\n    if (req.method === 'OPTIONS') {\r\n        return next(); // Allows the request to hit the CORS middleware below\r\n    }\r\n\r\n    const authHeader = req.headers.authorization;\r\n    if (!authHeader) {\r\n        // 2. IMPORTANT: Do NOT redirect. Send a 401 response instead.\r\n        return res.status(401).json({ message: 'Access denied. No token provided.' });\r\n    }\r\n\r\n  const token = authHeader.split(\" \")[1];\r\n  jwt.verify(token, JWT_SECRET, (err, decoded) => {\r\n    if (err) {\r\n      console.error(\"Token verification failed:\", err.message);\r\n      return res.status(401).json({ success: false, message: \"Invalid or expired token.\" });\r\n    }\r\n\r\n    req.user = {\r\n      userId: decoded.userId || null,\r\n      ResidentID: decoded.ResidentID || null,\r\n      role: (decoded.role || \"resident\").toLowerCase(),\r\n      fullName: decoded.fullName || \"\",\r\n      email: decoded.email || \"\",\r\n      NationalID: decoded.NationalID || \"\",\r\n      roleId: decoded.roleId || null,\r\n    };\r\n\r\n    next();\r\n  });\r\n};\r\n"
+        }
+    ]
+}

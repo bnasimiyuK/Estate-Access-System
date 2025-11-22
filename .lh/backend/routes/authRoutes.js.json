@@ -1,0 +1,26 @@
+{
+    "sourceFile": "backend/routes/authRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1763695595442,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763696520765,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n // backend/routes/authRoutes.js\n import express from \"express\";\n import jwt from \"jsonwebtoken\";\n import { loginUser } from \"../controllers/authController.js\"; // <-- Import the controller\n-\n+import { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\n const router = express.Router();\n \n // ===========================\n // Middleware: Verify JWT Token\n@@ -30,9 +30,18 @@\n return res.status(403).json({ error: \"Admin access required\" });\n  }\n next();\n }\n+// VALIDATE TOKEN TEST (Optional)\n+router.get(\"/validate\", authenticateJWT, (req, res) => {\n+    res.json({ valid: true, user: req.user });\n+});\n \n+// ADMIN TEST ROUTE\n+router.get(\"/admin\", authenticateJWT, isAdmin, (req, res) => {\n+    res.json({ message: \"Welcome Admin\", user: req.user });\n+});\n+\n // ===========================\n // Login Route (MOUNTED CONTROLLER)\n // ===========================\n router.post(\"/login\", loginUser); \n"
+                },
+                {
+                    "date": 1763697394889,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,49 +1,27 @@\n // backend/routes/authRoutes.js\n import express from \"express\";\n-import jwt from \"jsonwebtoken\";\n-import { loginUser } from \"../controllers/authController.js\"; // <-- Import the controller\n+import { loginUser } from \"../controllers/authController.js\";\n import { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\n+\n const router = express.Router();\n \n // ===========================\n-// Middleware: Verify JWT Token\n+// LOGIN ROUTE\n // ===========================\n-export function verifyToken(req, res, next) {\n-const authHeader = req.headers.authorization;\n-if (!authHeader) \n-return res.status(401).json({ error: \"Missing token\" });\n+router.post(\"/login\", loginUser);\n \n-const token = authHeader.split(\" \")[1];\n-try {\n-const decoded = jwt.verify(token, process.env.JWT_SECRET || \"supersecretkey\");\n-req.user = decoded; // attach decoded token to request\n-next();} catch (err) {\n- return res.status(401).json({ error: \"Invalid token\" }); }\n-}\n-\n // ===========================\n-// Middleware: Check Admin Role\n+// VALIDATE TOKEN TEST (Optional)\n // ===========================\n-export function isAdmin(req, res, next) {\n-// Check against the role name or roleId stored in the token payload\n-if (!req.user || req.user.role !== \"Admin\") {\n-return res.status(403).json({ error: \"Admin access required\" });\n- }\n-next();\n-}\n-// VALIDATE TOKEN TEST (Optional)\n router.get(\"/validate\", authenticateJWT, (req, res) => {\n     res.json({ valid: true, user: req.user });\n });\n \n+// ===========================\n // ADMIN TEST ROUTE\n+// ===========================\n router.get(\"/admin\", authenticateJWT, isAdmin, (req, res) => {\n     res.json({ message: \"Welcome Admin\", user: req.user });\n });\n\\ No newline at end of file\n \n-// ===========================\n-// Login Route (MOUNTED CONTROLLER)\n-// ===========================\n-router.post(\"/login\", loginUser); \n-\n-export default router;\n+export default router;\n"
+                }
+            ],
+            "date": 1763695595442,
+            "name": "Commit-0",
+            "content": "// backend/routes/authRoutes.js\nimport express from \"express\";\nimport jwt from \"jsonwebtoken\";\nimport { loginUser } from \"../controllers/authController.js\"; // <-- Import the controller\n\nconst router = express.Router();\n\n// ===========================\n// Middleware: Verify JWT Token\n// ===========================\nexport function verifyToken(req, res, next) {\nconst authHeader = req.headers.authorization;\nif (!authHeader) \nreturn res.status(401).json({ error: \"Missing token\" });\n\nconst token = authHeader.split(\" \")[1];\ntry {\nconst decoded = jwt.verify(token, process.env.JWT_SECRET || \"supersecretkey\");\nreq.user = decoded; // attach decoded token to request\nnext();} catch (err) {\n return res.status(401).json({ error: \"Invalid token\" }); }\n}\n\n// ===========================\n// Middleware: Check Admin Role\n// ===========================\nexport function isAdmin(req, res, next) {\n// Check against the role name or roleId stored in the token payload\nif (!req.user || req.user.role !== \"Admin\") {\nreturn res.status(403).json({ error: \"Admin access required\" });\n }\nnext();\n}\n\n// ===========================\n// Login Route (MOUNTED CONTROLLER)\n// ===========================\nrouter.post(\"/login\", loginUser); \n\nexport default router;"
+        }
+    ]
+}

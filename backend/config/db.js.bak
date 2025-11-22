@@ -1,0 +1,63 @@
+// ============================================
+// backend/config/db.js
+// ============================================
+
+import sql from "mssql";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// ✅ SQL Server configuration
+const dbConfig = {
+  user: process.env.DB_USER || "Beverly",
+  password: process.env.DB_PASSWORD || "Bev@1234567",
+  server: process.env.DB_SERVER || "localhost",
+  database: process.env.DB_NAME || "EstateAccessManagementSystem",
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000,
+  },
+  options: {
+    encrypt: false,               // for local dev
+    trustServerCertificate: true, // for self-signed certs
+  },
+};
+
+// ✅ Single shared connection pool (better performance)
+let poolPromise;
+
+export const getPool = async () => {
+  try {
+    if (!poolPromise) {
+      poolPromise = sql.connect(dbConfig)
+        .then(pool => {
+          console.log("✅ Connected to SQL Server (shared pool)");
+          return pool;
+        })
+        .catch(err => {
+          console.error("❌ SQL connection failed:", err.message);
+          poolPromise = null;
+          throw err;
+        });
+    }
+    return poolPromise;
+  } catch (err) {
+    console.error("❌ Database Connection Error:", err);
+    throw err;
+  }
+};
+
+// ✅ Optional: For rare direct connection (if needed)
+export const connectDB = async () => {
+  try {
+    const pool = await sql.connect(dbConfig);
+    console.log("✅ Connected to SQL Server (direct)");
+    return pool;
+  } catch (error) {
+    console.error("❌ Direct database connection error:", error);
+    throw error;
+  }
+};
+
+export default dbConfig;

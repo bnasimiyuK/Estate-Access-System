@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/adminResidentsRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763786403507,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763787497689,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,6 +24,22 @@\n         console.error(\"Error fetching approved residents:\", error);\r\n         res.status(500).json({ message: \"Server error\" });\r\n     }\r\n });\r\n+router.get(\"/pending\", authenticateJWT, isAdmin, async (req, res) => {\r\n+  try {\r\n+    const pool = await dbPool;\r\n+    const result = await pool.request().query(`\r\n+      SELECT RequestID, ResidentName, NationalID, PhoneNumber, Email,\r\n+             HouseNumber, CourtName, RoleName, Status, RequestedAt\r\n+      FROM MembershipRequests\r\n+      WHERE Status = 'Pending'\r\n+      ORDER BY RequestedAt DESC\r\n+    `);\r\n \r\n+    res.status(200).json(result.recordset);\r\n+  } catch (error) {\r\n+    console.error(\"Error fetching pending requests:\", error);\r\n+    res.status(500).json({ message: \"Server error\" });\r\n+  }\r\n+});\r\n export default router;\r\n"
+                }
+            ],
+            "date": 1763786403507,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\r\nimport sql from \"mssql\";\r\nimport { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\r\nimport { dbPool } from \"../server.js\";\r\n\r\nconst router = express.Router();\r\n\r\n/**\r\n * @route GET /api/admin/residents/approved\r\n * @desc Fetch all approved residents\r\n * @access Admin only\r\n */\r\nrouter.get(\"/approved\", authenticateJWT, isAdmin, async (req, res) => {\r\n    try {\r\n        const pool = await dbPool;\r\n        const result = await pool.request().query(`\r\n            SELECT ResidentID, ResidentName, NationalID, PhoneNumber, Email, HouseNumber, CourtName \r\n            FROM Residents\r\n            WHERE Status = 'Approved'\r\n        `);\r\n\r\n        res.status(200).json(result.recordset);\r\n    } catch (error) {\r\n        console.error(\"Error fetching approved residents:\", error);\r\n        res.status(500).json({ message: \"Server error\" });\r\n    }\r\n});\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

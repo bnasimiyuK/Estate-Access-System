@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Visitor Access</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <div class="max-w-6xl mx-auto w-full flex justify-between">
+      <h1 class="text-lg font-semibold">Visitor Access</h1>
+      <a href="admindashboard.html" class="bg-white text-blue-600 px-3 py-1 rounded">Back to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 space-y-6">
+
+    <!-- Check-In Section -->
+    <section class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Check-In by Pass Code</h2>
+      <div class="mb-4">
+        <input id="ciPass" placeholder="Enter pass code or visitor ID" class="border p-2 rounded w-full max-w-sm" />
+      </div>
+      <div class="flex gap-2">
+        <button id="ciBtn" class="bg-green-600 text-white px-4 py-2 rounded">Check In</button>
+        <button id="ciScanBtn" class="bg-gray-700 text-white px-4 py-2 rounded">Simulate Scan</button>
+      </div>
+      <p id="ciStatus" class="mt-4"></p>
+    </section>
+
+    <!-- Check-Out Section -->
+    <section class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Check-Out by Pass Code</h2>
+      <div class="mb-4">
+        <input id="coPass" placeholder="Enter pass code or visitor ID" class="border p-2 rounded w-full max-w-sm" />
+      </div>
+      <div class="flex gap-2">
+        <button id="coBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Check Out</button>
+        <button id="coSimBtn" class="bg-gray-700 text-white px-4 py-2 rounded">Simulate Latest</button>
+      </div>
+      <p id="coStatus" class="mt-4"></p>
+    </section>
+
+  </main>
+
+  <!-- JS -->
+  <script src="/js/visitorscheckinout.js"></script>
+
+</body>
+</html>

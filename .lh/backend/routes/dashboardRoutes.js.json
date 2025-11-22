@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/dashboardRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763698377417,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763698411303,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,4 +54,6 @@\n   }\r\n });\r\n router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n export default router;\r\n+router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n+router.get(\"/accesschart\", authenticateJWT, isAdmin, getAccessChartData);\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1763698377417,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\r\nimport sql from \"mssql\";\r\nimport { dbConfig } from \"../db.js\";\r\nimport { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\r\nimport { getDashboardSummary, getAccessChartData } from \"../controllers/dashboardController.js\";\r\nconst router = express.Router();\r\n\r\n/* -------------------------------------------\r\n   1️⃣ DASHBOARD SUMMARY API\r\n-------------------------------------------- */\r\nrouter.get(\"/summary\", async (req, res) => {\r\n  try {\r\n    const pool = await sql.connect(dbConfig);\r\n\r\n    const result = await pool.request().query(`\r\n      SELECT \r\n        (SELECT COUNT(*) FROM Residents) AS totalResidents,\r\n        (SELECT COUNT(*) FROM Residents WHERE Status = 'Approved') AS approvedResidents,\r\n        (SELECT COUNT(*) FROM Visitors) AS totalVisitors,\r\n        (SELECT COUNT(*) FROM VisitorCheckInOut WHERE CheckoutTime IS NULL) AS visitorsCheckedIn,\r\n        (SELECT COUNT(*) FROM VisitorCheckInOut WHERE CheckoutTime IS NOT NULL) AS visitorsCheckedOut\r\n    `);\r\n\r\n    res.json(result.recordset[0]);\r\n  } catch (err) {\r\n    console.error(\"Summary API Error:\", err);\r\n    res.status(500).json({ message: \"Server error\", error: err.message });\r\n  }\r\n});\r\n\r\n\r\n/* -------------------------------------------\r\n   2️⃣ ACCESS CHART API (visitors per hour)\r\n-------------------------------------------- */\r\nrouter.get(\"/chart\", async (req, res) => {\r\n  try {\r\n    const pool = await sql.connect(dbConfig);\r\n\r\n    const query = `\r\n      SELECT \r\n        DATEPART(HOUR, CheckinTime) AS hour,\r\n        COUNT(*) AS total\r\n      FROM Visitors\r\n      WHERE CheckinTime IS NOT NULL\r\n      GROUP BY DATEPART(HOUR, CheckinTime)\r\n      ORDER BY hour ASC\r\n    `;\r\n\r\n    const result = await pool.request().query(query);\r\n    res.json(result.recordset);\r\n  } catch (err) {\r\n    console.error(\"Access Chart API Error:\", err);\r\n    res.status(500).json({ message: \"Server error\", error: err.message });\r\n  }\r\n});\r\nrouter.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\nexport default router;\r\n"
+        }
+    ]
+}

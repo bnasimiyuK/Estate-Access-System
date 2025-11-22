@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athi Estate Access Management System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+   <video autoplay muted loop playsinline>
+    <source src="assets/Hero.webm" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+  <header class="flex justify-between items-center">
+    <a href="home.html" class="logo-link flex items-center space-x-2">
+    <div class="w-10 h-10 bg-white/20 rounded-full overflow-hidden border border-white/30">
+    <img src="assets/Logo.png" alt="Athi Highway Estate Logo" class="object-cover w-full h-full">
+    </div>
+    <span class="text-lg font-bold">Athi Highway Estate</span>
+  </a>
+    <nav>
+    <ul class="flex space-x-4">
+      <li><a href="about-us.html" class="nav-link">About Us</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+      <li><a href="membership.html" class="nav-link">Membership</a></li>
+      <li><a href="services.html" class="nav-link">Services Overview</a></li>
+      <li><a href="Gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="login.html" class="nav-link" id="loginLink">Login</a></li>
+      <li><a href="UpdateProfile.html" class="nav-link hidden" id="updateProfileLink">Update Profile</a></li>
+      <a href="admin.html" id="adminPortalLink" class="nav-link">Admin Portal</a>
+      <li><a href="#" class="nav-link hidden" id="logoutBtn">Logout</a></li>
+      <li class="text-white font-bold" id="userName"></li>
+    </ul>
+  </nav>
+  </header>
+  <main class="mt-28 px-4">
+    <!-- Access Control Dashboard -->
+    <section class="max-w-6xl mx-auto bg-black/50 p-6 rounded-2xl shadow-lg backdrop-blur-lg">
+      <h1 class="text-3xl font-bold mb-6 text-center">Access Control Dashboard</h1>
+      <!-- Access Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-gray-800/50 rounded-lg shadow-md text-left">
+          <thead class="bg-gray-700/50">
+            <tr>
+              <th class="px-6 py-3 text-sm font-semibold">Name</th>
+              <th class="px-6 py-3 text-sm font-semibold">Visitor/Resident ID</th>
+              <th class="px-6 py-3 text-sm font-semibold">Access Status</th>
+              <th class="px-6 py-3 text-sm font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="accessTableBody" class="divide-y divide-gray-600">
+            <tr>
+              <td class="px-6 py-4">Beverly Kong'ani</td>
+              <td class="px-6 py-4">V1234</td>
+              <td class="px-6 py-4 text-green-400 font-semibold">Granted</td>
+              <td class="px-6 py-4">
+                <button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold transition revokeBtn">Revoke</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4">Jane Smith</td>
+              <td class="px-6 py-4">R5678</td>
+              <td class="px-6 py-4 text-red-400 font-semibold">Revoked</td>
+              <td class="px-6 py-4">
+                <button class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm font-semibold transition grantBtn">Grant</button>
+              </td>
+            </tr>
+            <!-- More rows can be added dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <!-- Recent Access Logs -->
+      <div class="mt-6 bg-gray-800/50 p-4 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-2">Recent Access Logs</h2>
+        <ul id="recentAccessLogs" class="text-gray-300 text-sm space-y-1">
+          <li>Beverly Kong'ani entered at 09:12 AM</li>
+          <li>Visitor #23 exited at 09:45 AM</li>
+          <li>Praise Vidith access revoked at 10:00 AM</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <script src="js/access.js"></script>
+  <script src="js/navbar.js"></script>
+  </body>
+</html>

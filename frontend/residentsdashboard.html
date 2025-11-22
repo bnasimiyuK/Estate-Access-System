@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resident Dashboard | Estate Access System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Resident Dashboard</h1>
+    <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600">Logout</button>
+  </header>
+
+  <div class="p-6 max-w-5xl mx-auto space-y-6">
+<!-- Payment Section -->
+<div class="bg-white p-4 rounded shadow">
+  <h2 class="text-2xl font-bold mb-2">Payment Status & MPESA</h2>
+
+  <div id="paymentStatus" class="mb-2 text-lg">Loading...</div>
+
+  <!-- Service Name -->
+  <input 
+    type="text" 
+    id="serviceName" 
+    placeholder="Enter Service Name (e.g Estate Registration)" 
+    class="border p-2 rounded mb-2 w-full max-w-sm"
+  >
+
+  <!-- Amount -->
+  <input 
+    type="number" 
+    id="paymentAmount" 
+    placeholder="Enter Amount" 
+    class="border p-2 rounded mb-2 w-full max-w-sm"
+  >
+
+  <!-- Phone -->
+  <input 
+    type="text" 
+    id="phoneNumber" 
+    placeholder="Enter Phone (e.g 2547XXXXXXXX)" 
+    class="border p-2 rounded mb-2 w-full max-w-sm"
+  >
+
+  <!-- Pay button -->
+  <button 
+    id="payBtn" 
+    class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+  >
+    Pay Now
+  </button>
+
+  <div id="paymentResult" class="mt-2 text-lg"></div>
+</div>
+
+
+    <!-- Membership Requests -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-2xl font-bold mb-2">Membership Requests</h2>
+      <div id="membershipRequests">Loading...</div>
+    </div>
+
+    <!-- Approved Residents -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-2xl font-bold mb-2">Approved Residents</h2>
+      <div id="approvedResidents">Loading...</div>
+    </div>
+
+    <!-- Visitor Pass Overview -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-2xl font-bold mb-2">Visitor Pass Overview</h2>
+      <div id="visitorPassOverview">Loading...</div>
+    </div>
+
+  </div>
+
+  <!-- Axios and JS Module -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="module" src="js/residentsdashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athi Estate Access Management System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline>
+    <source src="assets/Hero.webm" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+  <main class="relative h-screen w-full flex items-center justify-center">
+  <!-- Announcements Button Centered -->
+  <button id="openAnnouncementsBtn"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold shadow-lg transition">
+    Announcements
+  </button>
+  <!-- Announcements Modal -->
+  <section id="announcementsSection" class="hidden fixed inset-0 bg-black/85 backdrop-blur-lg flex flex-col items-center justify-center z-50 p-6">
+    <div class="flex justify-between items-center w-full max-w-6xl mb-4">
+      <h2 class="text-3xl font-semibold">Estate Announcements</h2>
+      <button id="closeAnnouncementsBtn" class="text-red-400 hover:text-red-600 text-3xl font-bold">&times;</button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl w-full">
+      <div class="bg-gray-800/50 p-4 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold mb-2">Water Maintenance</h3>
+        <p class="text-gray-300 text-sm">October 15, 2025 — Water supply will be interrupted between 9 AM and 1 PM.</p>
+      </div>
+      <div class="bg-gray-800/50 p-4 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold mb-2">Security Drill</h3>
+        <p class="text-gray-300 text-sm">October 20, 2025 — Estate security drill for all residents.</p>
+      </div>
+      <div class="bg-gray-800/50 p-4 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold mb-2">Community Meeting</h3>
+        <p class="text-gray-300 text-sm">October 22, 2025 — Annual resident meeting at the clubhouse at 5 PM.</p>
+      </div>
+      <div class="bg-gray-800/50 p-4 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold mb-2">Garden Cleanup</h3>
+        <p class="text-gray-300 text-sm">October 28, 2025 — Volunteer residents are invited for estate garden cleanup.</p>
+      </div>
+    </div>
+    <button id="closeAnnouncementsBtnBottom" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition">
+      Close Announcements
+    </button>
+  </section>
+</main>
+  <script src="js/announcements.js"></script>
+  <script src="js/navbar.js"></script>
+  </body>
+</html>

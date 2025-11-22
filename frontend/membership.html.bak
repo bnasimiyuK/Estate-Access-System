@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership | Athi Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Compact table scroll */
+        #adminTableSection { max-height: 300px; overflow-y: auto; }
+        table th, table td { font-size: 0.75rem; padding: 0.25rem 0.5rem; border: 1px solid #e5e7eb; }
+        #residentFormSection input, #residentFormSection select { padding: 0.5rem; font-size: 0.85rem; }
+        #residentFormSection button { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    </style>
+</head>
+<body class="bg-gray-100 p-3">
+    <div class="max-w-4xl mx-auto">
+
+        <div id="residentFormSection" class="bg-white p-4 rounded shadow mb-4">
+            <h2 class="text-xl font-bold mb-2">Submit Membership Request</h2>
+            <form id="membershipForm" class="space-y-2">
+                <input type="text" name="RequestID" placeholder="Request ID" class="w-full border rounded bg-gray-200" readonly required />
+                <input type="text" name="RecordID" placeholder="Record ID (Autofilled)" class="w-full border rounded bg-gray-200" readonly required />
+                
+                <input type="text" name="ResidentName" placeholder="Full Name" class="w-full border rounded" required />
+                <input type="text" name="NationalID" placeholder="National ID (8 digits)" class="w-full border rounded" required />
+                <input type="text" name="PhoneNumber" placeholder="Phone Number (+254712345678)" class="w-full border rounded" required />
+                <input type="email" name="Email" placeholder="Email" class="w-full border rounded" required />
+                <input type="text" name="CourtName" placeholder="Court Name" class="w-full border rounded" required />
+                <input type="text" name="HouseNumber" placeholder="House Number" class="w-full border rounded" required />
+                
+                <select id="RoleName" name="RoleName" required class="input-field">
+  <option value="Resident">Resident</option>
+  <option value="Admin">Admin</option>
+  <option value="Security">Security</option>
+  <option value="Visitor">Visitor</option>
+</select>
+                <input type="text" name="Action" placeholder="Action (optional)" class="w-full border rounded" />
+                <button type="submit" class="bg-blue-600 text-white rounded w-full mt-1 hover:bg-blue-700">Submit</button>
+            </form>
+
+    </div>
+
+    <script type="module" src="js/membership.js"></script>
+</body>
+</html>

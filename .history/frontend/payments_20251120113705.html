@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Athi Estate | Payments</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <!-- Inter Font -->
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+ </style>
+ <!-- XLSX for Excel/CSV export -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col h-screen">
+
+  <header class="bg-white shadow-md p-4 sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+          <h1 class="text-xl font-bold text-indigo-700">Athi Estate Payments</h1>
+          <div id="userInfo" class="text-xs text-gray-500">Loading User...</div>
+      </div>
+  </header>
+
+  <!-- DASHBOARD SUMMARY -->
+  <section id="dashboardSummary" class="p-4 pt-2 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs w-full"></section>
+
+  <main class="flex-1 overflow-y-auto p-4 max-w-7xl mx-auto w-full space-y-4">
+
+      <!-- MPESA PAYMENT SIMULATION / FORM -->
+    <section class="bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
+      <h2 class="text-indigo-700 font-bold mb-4 text-lg">💳 Initiate MPESA Payment</h2>
+      <div class="flex flex-col space-y-3 max-w-sm">
+          <input type="text" id="residentIdInput" placeholder="Resident ID (e.g., RES001)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+          <input type="text" id="serviceNameInput" placeholder="Service Name (e.g., Monthly Dues)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+          <input type="number" id="paymentAmountInput" placeholder="Amount (Ksh)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+          <input type="text" id="phoneNumberInput" placeholder="Phone (2547XXXXXXXX)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+          <button id="payBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01]">
+              <span id="payBtnText">Simulate Payment</span>
+          </button>
+          <div id="paymentResult" class="text-xs mt-2 p-2 rounded-lg text-center hidden"></div>
+      </div>
+    </section>
+
+    <!-- PAYMENT HISTORY -->
+    <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col border border-indigo-100">
+      <h3 class="text-indigo-700 font-semibold mb-3 text-lg">📋 Full Payment History</h3>
+      <div class="flex justify-between items-center mb-3 text-sm">
+          <input type="text" id="filterInput" placeholder="Filter by Resident ID, Status, or Ref" class="border rounded-lg px-3 py-1.5 focus:ring-indigo-500 focus:border-indigo-500 transition w-1/3"/>
+          <div class="space-x-2">
+              <button id="exportCsv" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-lg text-white text-sm font-medium transition shadow-sm">Export CSV</button>
+              <button id="exportExcel" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg text-white text-sm font-medium transition shadow-sm">Export Excel</button>
+          </div>
+      </div>
+      <div class="overflow-x-auto overflow-y-auto max-h-[300px] border border-gray-200 rounded-lg">
+          <table id="paymentsTable" class="min-w-full text-xs">
+              <thead class="bg-indigo-100 text-indigo-800 sticky top-0 shadow-sm">
+                  <tr>
+                      <th class="px-3 py-2 text-left w-16">ID</th>
+                      <th class="px-3 py-2 text-left w-20">ResidentID</th>
+                      <th class="px-3 py-2 text-left w-16">Amount</th>
+                      <th class="px-3 py-2 text-left w-24">Date</th>
+                      <th class="px-3 py-2 text-left w-20">Status</th>
+                      <th class="px-3 py-2 text-left w-20">Reference</th>
+                      <th class="px-3 py-2 text-left w-24">Method</th>
+                      <th class="px-3 py-2 text-left w-16">Action</th>
+                      <th class="px-3 py-2 text-left w-20">NationalID</th>
+                      <th class="px-3 py-2 text-left w-24">Service Name</th>
+                      <th class="px-3 py-2 text-left w-24">Phone</th>
+                      <th class="px-3 py-2 text-left w-24">Verified Date</th>
+                  </tr>
+              </thead>
+              <tbody id="paymentsBody" class="divide-y divide-gray-100">
+                  <tr><td colspan="12" class="text-center py-4 text-gray-500">Loading payments...</td></tr>
+              </tbody>
+          </table>
+      </div>
+    </section>
+
+    <!-- VERIFIED PAYMENTS (Simplified View) -->
+    <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col border border-green-100">
+      <h3 class="text-green-700 font-semibold mb-3 text-lg">✅ Verified Transactions</h3>
+      <div class="flex justify-between items-center mb-3 text-sm">
+          <input type="text" id="verifiedFilterInput" placeholder="Filter by Resident ID" class="border rounded-lg px-3 py-1.5 focus:ring-green-500 focus:border-green-500 transition w-1/3"/>
+          <div class="space-x-2">
+              <button id="exportVerifiedCsv" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-lg text-white text-sm font-medium transition shadow-sm">Export CSV</button>
+              <button id="exportVerifiedExcel" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg text-white text-sm font-medium transition shadow-sm">Export Excel</button>
+          </div>
+      </div>
+      <div class="overflow-x-auto overflow-y-auto max-h-[250px] border border-gray-200 rounded-lg">
+          <table id="verifiedTable" class="min-w-full text-xs">
+              <thead class="bg-green-100 text-green-800 sticky top-0 shadow-sm">
+                  <tr>
+                      <th class="px-3 py-2 text-left w-20">ResidentID</th>
+                      <th class="px-3 py-2 text-left w-16">Amount</th>
+                      <th class="px-3 py-2 text-left w-20">Reference</th>
+                      <th class="px-3 py-2 text-left w-24">Verified Date</th>
+                  </tr>
+              </thead>
+              <tbody id="verifiedBody" class="divide-y divide-gray-100"></tbody>
+          </table>
+      </div>
+    </section>
+
+    <!-- BALANCES (Grouped by Resident) -->
+    <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col border border-yellow-100">
+      <h3 class="text-yellow-700 font-semibold mb-3 text-lg">💰 Resident Balances Summary</h3>
+      <div class="flex justify-end mb-3 text-sm space-x-2">
+          <button id="exportBalancesCsv" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-lg text-white text-sm font-medium transition shadow-sm">Export CSV</button>
+          <button id="exportBalancesExcel" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg text-white text-sm font-medium transition shadow-sm">Export Excel</button>
+      </div>
+      <div class="overflow-x-auto overflow-y-auto max-h-[250px] border border-gray-200 rounded-lg">
+          <table id="balanceTable" class="min-w-full text-xs">
+              <thead class="bg-yellow-100 text-yellow-800 sticky top-0 shadow-sm">
+                  <tr>
+                      <th class="px-3 py-2 text-left w-20">ResidentID</th>
+                      <th class="px-3 py-2 text-left w-20">Total Paid (Verified)</th>
+                      <th class="px-3 py-2 text-left w-20">Total Due (Simulated)</th>
+                      <th class="px-3 py-2 text-left w-20">Balance</th>
+                  </tr>
+              </thead>
+              <tbody id="balanceBody" class="divide-y divide-gray-100"></tbody>
+          </table>
+      </div>
+    </section>
+  </main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { getFirestore, collection, onSnapshot, addDoc, doc, setLogLevel, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+  // --- GLOBAL FIREBASE/APP SETUP ---
+  const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+  const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+  const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+  let db, auth, userId;
+  let allPayments = []; // Store all fetched data globally
+  setLogLevel('Debug');
+
+  // Utility to format date
+  const formatDate = (timestamp) => {
+      if (!timestamp || !timestamp.toDate) return 'N/A';
+      return timestamp.toDate().toLocaleString('en-GB', {
+          year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+  };
+
+  // Utility to format currency
+  const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(amount);
+  };
+
+  // --- DATA PROCESSING & RENDERING ---
+
+  function calculateDashboardSummary(payments) {
+      const totalPayments = payments.length;
+      const verifiedPayments = payments.filter(p => p.Status === 'Verified').length;
+      const totalVerifiedAmount = payments
+          .filter(p => p.Status === 'Verified')
+          .reduce((sum, p) => sum + p.Amount, 0);
+
+      const summaryHtml = `
+          <div class="bg-white p-4 rounded-xl shadow-md border border-gray-200">
+              <p class="text-xs text-gray-500">Total Transactions</p>
+              <p class="text-xl font-bold text-indigo-600">${totalPayments}</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-md border border-gray-200">
+              <p class="text-xs text-gray-500">Verified Payments</p>
+              <p class="text-xl font-bold text-green-600">${verifiedPayments}</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-md border border-gray-200">
+              <p class="text-xs text-gray-500">Total Verified Amount</p>
+              <p class="text-xl font-bold text-indigo-600">${formatCurrency(totalVerifiedAmount)}</p>
+          </div>
+      `;
+      document.getElementById('dashboardSummary').innerHTML = summaryHtml;
+  }
+
+  function calculateBalances(payments) {
+      const balances = {};
+      const requiredDue = {}; // Simple simulation: what they attempted to pay is their "due"
+      const verifiedOnly = payments.filter(p => p.Status === 'Verified');
+
+      verifiedOnly.forEach(p => {
+          const id = p.ResidentID;
+          if (!balances[id]) {
+              balances[id] = { totalPaid: 0, totalDue: 0, ResidentID: id };
+          }
+          balances[id].totalPaid += p.Amount;
+      });
+
+      // Simple due simulation: sum of all attempted payment amounts
+      payments.forEach(p => {
+          const id = p.ResidentID;
+          if (!balances[id]) {
+              balances[id] = { totalPaid: 0, totalDue: 0, ResidentID: id };
+          }
+          balances[id].totalDue += p.Amount;
+      });
+
+      // Render Balances Table
+      const balanceBody = document.getElementById('balanceBody');
+      balanceBody.innerHTML = '';
+      const balanceArray = Object.values(balances);
+
+      // Sort by ResidentID for better display
+      balanceArray.sort((a, b) => a.ResidentID.localeCompare(b.ResidentID));
+
+      balanceArray.forEach(b => {
+          const balance = b.totalPaid - b.totalDue;
+          const balanceClass = balance >= 0 ? 'text-green-600' : 'text-red-600 font-bold';
+          const row = `
+              <tr class="hover:bg-gray-50">
+                  <td class="px-3 py-2">${b.ResidentID}</td>
+                  <td class="px-3 py-2 text-right">${formatCurrency(b.totalPaid)}</td>
+                  <td class="px-3 py-2 text-right">${formatCurrency(b.totalDue)}</td>
+                  <td class="px-3 py-2 text-right ${balanceClass}">${formatCurrency(balance)}</td>
+              </tr>
+          `;
+          balanceBody.insertAdjacentHTML('beforeend', row);
+      });
+      return balanceArray;
+  }
+
+  function renderPaymentsTable(data, tableId) {
+      const body = document.getElementById(tableId);
+      body.innerHTML = '';
+      if (data.length === 0) {
+          body.innerHTML = '<tr><td colspan="12" class="text-center py-4 text-gray-500">No payments found.</td></tr>';
+          return;
+      }
+
+      data.forEach(p => {
+          const statusClass = p.Status === 'Verified' ? 'bg-green-100 text-green-800' :
+                             p.Status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                             'bg-red-100 text-red-800';
+
+          const row = `
+              <tr class="hover:bg-gray-50">
+                  <td class="px-3 py-1.5">${p.PaymentID.substring(0, 8)}...</td>
+                  <td class="px-3 py-1.5 font-medium">${p.ResidentID}</td>
+                  <td class="px-3 py-1.5 text-right">${formatCurrency(p.Amount)}</td>
+                  <td class="px-3 py-1.5">${formatDate(p.PaymentDate)}</td>
+                  <td class="px-3 py-1.5"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${p.Status}</span></td>
+                  <td class="px-3 py-1.5">${p.Reference}</td>
+                  <td class="px-3 py-1.5">${p.PaymentMethod}</td>
+                  <td class="px-3 py-1.5">${p.Action || 'View'}</td>
+                  <td class="px-3 py-1.5">${p.NationalID || 'N/A'}</td>
+                  <td class="px-3 py-1.5">${p.ServiceName || 'General'}</td>
+                  <td class="px-3 py-1.5">${p.PhoneNumber || 'N/A'}</td>
+                  <td class="px-3 py-1.5">${p.VerifiedDate ? formatDate(p.VerifiedDate) : 'Pending'}</td>
+              </tr>
+          `;
+          body.insertAdjacentHTML('beforeend', row);
+      });
+  }
+
+  function renderVerifiedTable(data) {
+      const body = document.getElementById('verifiedBody');
+      body.innerHTML = '';
+      const verified = data.filter(p => p.Status === 'Verified');
+
+      if (verified.length === 0) {
+          body.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">No verified payments found.</td></tr>';
+          return;
+      }
+
+      verified.forEach(p => {
+          const row = `
+              <tr class="hover:bg-gray-50">
+                  <td class="px-3 py-1.5 font-medium">${p.ResidentID}</td>
+                  <td class="px-3 py-1.5 text-right">${formatCurrency(p.Amount)}</td>
+                  <td class="px-3 py-1.5">${p.Reference}</td>
+                  <td class="px-3 py-1.5">${formatDate(p.VerifiedDate)}</td>
+              </tr>
+          `;
+          body.insertAdjacentHTML('beforeend', row);
+      });
+      return verified;
+  }
+
+  // --- FIREBASE INTERACTION ---
+
+  async function initFirebase() {
+      try {
+          const app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          auth = getAuth(app);
+
+          // Sign in using custom token or anonymously
+          if (initialAuthToken) {
+              await signInWithCustomToken(auth, initialAuthToken);
+          } else {
+              await signInAnonymously(auth);
+          }
+
+          onAuthStateChanged(auth, (user) => {
+              if (user) {
+                  userId = user.uid;
+                  document.getElementById('userInfo').textContent = `User ID: ${userId}`;
+                  startRealtimeListener();
+              } else {
+                  console.error("User not authenticated.");
+                  document.getElementById('userInfo').textContent = 'Authentication Failed';
+              }
+          });
+      } catch (error) {
+          console.error("Error initializing Firebase:", error);
+          document.getElementById('userInfo').textContent = `Init Error: ${error.message}`;
+      }
+  }
+
+  function startRealtimeListener() {
+      if (!db) return;
+
+      const paymentsCollectionPath = `/artifacts/${appId}/public/data/payments`;
+      const q = collection(db, paymentsCollectionPath);
+
+      // Listen for real-time updates
+      onSnapshot(q, (snapshot) => {
+          allPayments = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+          }));
+
+          // Sort by PaymentDate descending
+          allPayments.sort((a, b) => (b.PaymentDate?.toMillis() || 0) - (a.PaymentDate?.toMillis() || 0));
+
+          // Process and render data
+          updateAllViews(allPayments);
+      }, (error) => {
+          console.error("Error listening to payments collection:", error);
+      });
+  }
+
+  function updateAllViews(data) {
+      // 1. Dashboard Summary
+      calculateDashboardSummary(data);
+
+      // 2. Full Payment History Table (Default display, unfiltered)
+      renderPaymentsTable(data, 'paymentsBody');
+
+      // 3. Verified Payments Table (Default display, unfiltered)
+      renderVerifiedTable(data);
+
+      // 4. Balances Table
+      calculateBalances(data);
+  }
+
+
+  async function addPayment(residentId, serviceName, amount, phoneNumber) {
+      if (!db || !userId) {
+          console.error("Database not initialized or user not logged in.");
+          return { success: false, message: "System error: Database not ready." };
+      }
+
+      const paymentsCollectionPath = `/artifacts/${appId}/public/data/payments`;
+
+      // Simple logic to simulate verification/status based on amount
+      const isVerified = amount > 1000; // Large payments auto-verified for simulation
+      const status = isVerified ? 'Verified' : 'Pending';
+      const reference = 'MPESA' + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+      const newPayment = {
+          PaymentID: crypto.randomUUID(),
+          ResidentID: residentId.toUpperCase().trim(),
+          Amount: parseFloat(amount),
+          PaymentDate: serverTimestamp(),
+          Status: status,
+          Reference: reference,
+          PaymentMethod: 'MPESA',
+          Action: 'Initial Payment',
+          NationalID: '', // Placeholder
+          ServiceName: serviceName,
+          PhoneNumber: phoneNumber,
+          VerifiedDate: isVerified ? serverTimestamp() : null
+      };
+
+      try {
+          await addDoc(collection(db, paymentsCollectionPath), newPayment);
+          return {
+              success: true,
+              message: `Payment of ${formatCurrency(amount)} for ${residentId} initiated. Status: ${status}. Ref: ${reference}.`
+          };
+      } catch (e) {
+          console.error("Error adding document: ", e);
+          return { success: false, message: `Error processing payment: ${e.message}` };
+      }
+  }
+
+  // --- UI/EVENT HANDLERS ---
+
+  document.addEventListener('DOMContentLoaded', () => {
+      initFirebase();
+
+      const payBtn = document.getElementById('payBtn');
+      const payBtnText = document.getElementById('payBtnText');
+      const paymentResult = document.getElementById('paymentResult');
+
+      payBtn.addEventListener('click', async () => {
+          const residentId = document.getElementById('residentIdInput').value;
+          const serviceName = document.getElementById('serviceNameInput').value;
+          const amount = document.getElementById('paymentAmountInput').value;
+          const phoneNumber = document.getElementById('phoneNumberInput').value;
+
+          if (!residentId || !serviceName || !amount || !phoneNumber) {
+              paymentResult.className = 'text-xs mt-2 p-2 rounded-lg text-red-700 bg-red-100 block';
+              paymentResult.textContent = 'Please fill in all fields.';
+              return;
+          }
+
+          if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+              paymentResult.className = 'text-xs mt-2 p-2 rounded-lg text-red-700 bg-red-100 block';
+              paymentResult.textContent = 'Amount must be a valid positive number.';
+              return;
+          }
+
+          // Disable button and show loading
+          payBtn.disabled = true;
+          payBtnText.textContent = 'Processing...';
+          paymentResult.textContent = '';
+          paymentResult.classList.add('hidden');
+
+          const result = await addPayment(residentId, serviceName, amount, phoneNumber);
+
+          // Re-enable button
+          payBtn.disabled = false;
+          payBtnText.textContent = 'Simulate Payment';
+
+          // Show result
+          if (result.success) {
+              paymentResult.className = 'text-xs mt-2 p-2 rounded-lg text-green-700 bg-green-100 block';
+          } else {
+              paymentResult.className = 'text-xs mt-2 p-2 rounded-lg text-red-700 bg-red-100 block';
+          }
+          paymentResult.textContent = result.message;
+
+          // Clear form fields
+          document.getElementById('residentIdInput').value = '';
+          document.getElementById('serviceNameInput').value = '';
+          document.getElementById('paymentAmountInput').value = '';
+          document.getElementById('phoneNumberInput').value = '';
+      });
+
+      // --- FILTERING ---
+      document.getElementById('filterInput').addEventListener('input', (e) => {
+          const filterTerm = e.target.value.toLowerCase();
+          const filteredData = allPayments.filter(p =>
+              p.ResidentID.toLowerCase().includes(filterTerm) ||
+              p.Status.toLowerCase().includes(filterTerm) ||
+              p.Reference.toLowerCase().includes(filterTerm)
+          );
+          renderPaymentsTable(filteredData, 'paymentsBody');
+      });
+
+      document.getElementById('verifiedFilterInput').addEventListener('input', (e) => {
+          const filterTerm = e.target.value.toLowerCase();
+          const verified = allPayments.filter(p => p.Status === 'Verified');
+          const filteredData = verified.filter(p =>
+              p.ResidentID.toLowerCase().includes(filterTerm)
+          );
+          renderVerifiedTable(filteredData);
+      });
+
+
+      // --- EXPORT LOGIC ---
+
+      function exportTable(data, filename) {
+          const ws = XLSX.utils.json_to_sheet(data);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "Data");
+          XLSX.writeFile(wb, filename);
+      }
+
+      function cleanDataForExport(data) {
+          return data.map(p => ({
+              PaymentID: p.PaymentID,
+              ResidentID: p.ResidentID,
+              Amount: p.Amount,
+              PaymentDate: formatDate(p.PaymentDate),
+              Status: p.Status,
+              Reference: p.Reference,
+              PaymentMethod: p.PaymentMethod,
+              Action: p.Action,
+              NationalID: p.NationalID,
+              ServiceName: p.ServiceName,
+              PhoneNumber: p.PhoneNumber,
+              VerifiedDate: p.VerifiedDate ? formatDate(p.VerifiedDate) : 'N/A'
+          }));
+      }
+
+      // Full History Export
+      document.getElementById('exportExcel').addEventListener('click', () => {
+          exportTable(cleanDataForExport(allPayments), 'Athi_Payment_History.xlsx');
+      });
+      document.getElementById('exportCsv').addEventListener('click', () => {
+          exportTable(cleanDataForExport(allPayments), 'Athi_Payment_History.csv');
+      });
+
+      // Verified Payments Export
+      document.getElementById('exportVerifiedExcel').addEventListener('click', () => {
+          const verified = allPayments.filter(p => p.Status === 'Verified');
+          exportTable(cleanDataForExport(verified), 'Athi_Verified_Payments.xlsx');
+      });
+      document.getElementById('exportVerifiedCsv').addEventListener('click', () => {
+          const verified = allPayments.filter(p => p.Status === 'Verified');
+          exportTable(cleanDataForExport(verified), 'Athi_Verified_Payments.csv');
+      });
+
+      // Balances Export
+      document.getElementById('exportBalancesExcel').addEventListener('click', () => {
+          const balances = calculateBalances(allPayments); // Recalculate balances
+          exportTable(balances.map(b => ({
+              ResidentID: b.ResidentID,
+              TotalPaid: b.totalPaid,
+              TotalDue: b.totalDue,
+              Balance: b.totalPaid - b.totalDue
+          })), 'Athi_Resident_Balances.xlsx');
+      });
+      document.getElementById('exportBalancesCsv').addEventListener('click', () => {
+          const balances = calculateBalances(allPayments);
+          exportTable(balances.map(b => ({
+              ResidentID: b.ResidentID,
+              TotalPaid: b.totalPaid,
+              TotalDue: b.totalDue,
+              Balance: b.totalPaid - b.totalDue
+          })), 'Athi_Resident_Balances.csv');
+      });
+  });
+
+</script>
+</body>
+</html>

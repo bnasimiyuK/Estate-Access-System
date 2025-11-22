@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/db.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763676080171,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763676080171,
+            "name": "Commit-0",
+            "content": "// ==========================================\r\n// backend/db.js\r\n// SQL Server Connection (MSSQL)\r\n// ==========================================\r\n\r\nimport sql from \"mssql\";\r\nimport dotenv from \"dotenv\";\r\n\r\ndotenv.config();\r\n\r\n// 🔧 SQL Server Configuration\r\n// ✅ FIX: Added 'export' here so other files can import it as a named export.\r\nexport const dbConfig = { \r\n    user: process.env.DB_USER || \"Beverly\",\r\n    password: process.env.DB_PASSWORD || \"Bev@1234567\",\r\n    server: process.env.DB_SERVER || \"localhost\",\r\n    database: process.env.DB_NAME || \"EstateAccessManagementSystem\",\r\n    pool: {\r\n        max: 10,\r\n        min: 0,\r\n        idleTimeoutMillis: 30000,\r\n    },\r\n    options: {\r\n        encrypt: false, // set true if using Azure SQL\r\n        trustServerCertificate: true,\r\n    },\r\n};\r\n\r\n// 🧩 Shared SQL Connection Pool\r\nlet poolPromise = null;\r\n\r\nexport const getPool = async () => {\r\n    try {\r\n        if (!poolPromise) {\r\n            poolPromise = sql.connect(dbConfig)\r\n                .then(pool => {\r\n                    console.log(\"✅ Connected to SQL Server (shared pool)\");\r\n                    return pool;\r\n                })\r\n                .catch(err => {\r\n                    console.error(\"❌ SQL connection failed:\", err.message);\r\n                    poolPromise = null; // reset if connection failed\r\n                    throw err;\r\n                });\r\n        }\r\n        return poolPromise;\r\n    } catch (err) {\r\n        console.error(\"❌ Database Connection Error:\", err);\r\n        throw err;\r\n    }\r\n};\r\n\r\n// ✅ Export the SQL instance for queries\r\nexport { sql };\r\n\r\n// ✅ Optional default export (for convenience)\r\nexport default { getPool, sql, dbConfig }; // Added dbConfig to default export"
+        }
+    ]
+}

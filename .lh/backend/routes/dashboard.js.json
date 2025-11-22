@@ -1,0 +1,38 @@
+{
+    "sourceFile": "backend/routes/dashboard.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1763675700394,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763675871446,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,56 @@\n-router.get(\"/dashboard/summary\", async (req, res) => {\r\n+import express from \"express\";\r\n+import sql from \"mssql\";\r\n+import { dbConfig } from \"../db.js\";\r\n+\r\n+const router = express.Router();\r\n+\r\n+/* -------------------------------------------\r\n+   1️⃣ DASHBOARD SUMMARY API\r\n+-------------------------------------------- */\r\n+router.get(\"/summary\", async (req, res) => {\r\n   try {\r\n     const pool = await sql.connect(dbConfig);\r\n-    const result = await pool.request().query(`SELECT ...`);\r\n+\r\n+    const result = await pool.request().query(`\r\n+      SELECT \r\n+        (SELECT COUNT(*) FROM Residents) AS totalResidents,\r\n+        (SELECT COUNT(*) FROM Residents WHERE Status = 'Approved') AS approvedResidents,\r\n+        (SELECT COUNT(*) FROM Visitors) AS totalVisitors,\r\n+        (SELECT COUNT(*) FROM Visitors WHERE CheckoutTime IS NULL) AS visitorsCheckedIn,\r\n+        (SELECT COUNT(*) FROM Visitors WHERE CheckoutTime IS NOT NULL) AS visitorsCheckedOut\r\n+    `);\r\n+\r\n+    res.json(result.recordset[0]);\r\n+  } catch (err) {\r\n+    console.error(\"Summary API Error:\", err);\r\n+    res.status(500).json({ message: \"Server error\", error: err.message });\r\n+  }\r\n+});\r\n+\r\n+\r\n+/* -------------------------------------------\r\n+   2️⃣ ACCESS CHART API (visitors per hour)\r\n+-------------------------------------------- */\r\n+router.get(\"/chart\", async (req, res) => {\r\n+  try {\r\n+    const pool = await sql.connect(dbConfig);\r\n+\r\n+    const query = `\r\n+      SELECT \r\n+        DATEPART(HOUR, CheckinTime) AS hour,\r\n+        COUNT(*) AS total\r\n+      FROM Visitors\r\n+      WHERE CheckinTime IS NOT NULL\r\n+      GROUP BY DATEPART(HOUR, CheckinTime)\r\n+      ORDER BY hour ASC\r\n+    `;\r\n+\r\n+    const result = await pool.request().query(query);\r\n     res.json(result.recordset);\r\n   } catch (err) {\r\n-    console.error(\"Summary API Error:\", err.message);\r\n+    console.error(\"Access Chart API Error:\", err);\r\n     res.status(500).json({ message: \"Server error\", error: err.message });\r\n   }\r\n });\r\n+\r\n+export default router;\r\n"
+                },
+                {
+                    "date": 1763694174701,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,10 +15,10 @@\n       SELECT \r\n         (SELECT COUNT(*) FROM Residents) AS totalResidents,\r\n         (SELECT COUNT(*) FROM Residents WHERE Status = 'Approved') AS approvedResidents,\r\n         (SELECT COUNT(*) FROM Visitors) AS totalVisitors,\r\n-        (SELECT COUNT(*) FROM Visitors WHERE CheckoutTime IS NULL) AS visitorsCheckedIn,\r\n-        (SELECT COUNT(*) FROM Visitors WHERE CheckoutTime IS NOT NULL) AS visitorsCheckedOut\r\n+        (SELECT COUNT(*) FROM VisitorCheckInOut WHERE CheckoutTime IS NULL) AS visitorsCheckedIn,\r\n+        (SELECT COUNT(*) FROM VisitorCheckInOut WHERE CheckoutTime IS NOT NULL) AS visitorsCheckedOut\r\n     `);\r\n \r\n     res.json(result.recordset[0]);\r\n   } catch (err) {\r\n"
+                },
+                {
+                    "date": 1763695886500,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import sql from \"mssql\";\r\n import { dbConfig } from \"../db.js\";\r\n-\r\n+import { verifyToken, isAdmin } from \"../middleware/authMiddleware.js\";\r\n const router = express.Router();\r\n \r\n /* -------------------------------------------\r\n    1️⃣ DASHBOARD SUMMARY API\r\n"
+                },
+                {
+                    "date": 1763695909606,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -51,6 +51,6 @@\n     console.error(\"Access Chart API Error:\", err);\r\n     res.status(500).json({ message: \"Server error\", error: err.message });\r\n   }\r\n });\r\n-\r\n+router.get(\"/summary\", verifyToken, isAdmin, getDashboardSummary);\r\n export default router;\r\n"
+                },
+                {
+                    "date": 1763697957346,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import sql from \"mssql\";\r\n import { dbConfig } from \"../db.js\";\r\n-import { verifyToken, isAdmin } from \"../middleware/authMiddleware.js\";\r\n+import { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\r\n const router = express.Router();\r\n \r\n /* -------------------------------------------\r\n    1️⃣ DASHBOARD SUMMARY API\r\n@@ -51,6 +51,6 @@\n     console.error(\"Access Chart API Error:\", err);\r\n     res.status(500).json({ message: \"Server error\", error: err.message });\r\n   }\r\n });\r\n-router.get(\"/summary\", verifyToken, isAdmin, getDashboardSummary);\r\n+router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n export default router;\r\n"
+                }
+            ],
+            "date": 1763675700394,
+            "name": "Commit-0",
+            "content": "router.get(\"/dashboard/summary\", async (req, res) => {\r\n  try {\r\n    const pool = await sql.connect(dbConfig);\r\n    const result = await pool.request().query(`SELECT ...`);\r\n    res.json(result.recordset);\r\n  } catch (err) {\r\n    console.error(\"Summary API Error:\", err.message);\r\n    res.status(500).json({ message: \"Server error\", error: err.message });\r\n  }\r\n});\r\n"
+        }
+    ]
+}

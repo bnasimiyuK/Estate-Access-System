@@ -1,0 +1,82 @@
+// ==========================================
+// backend/controllers/authController.js
+// ==========================================
+
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import sql from "mssql";
+import dbConfig from "../config/dbConfig.js";
+
+// 🟨 LOGIN USER
+export const loginUser = async (req, res) => {
+  try {
+    const { Username, Password } = req.body;
+    const pool = await sql.connect(dbConfig);
+
+    const result = await pool.request()
+      .input("Username", sql.NVarChar, Username)
+      .query(`
+        SELECT 
+          UserID,
+          Username,
+          PasswordHash,
+          FullName,
+          RoleID,
+          IsApproved
+        FROM Users
+        WHERE Username = @Username
+      `);
+
+    // 🟥 No user found
+    if (result.recordset.length === 0)
+      return res.status(404).json({ message: "User not found" });
+
+    const user = result.recordset[0];
+
+    // 🔑 Compare password with hashed value
+    const isPasswordValid = await bcrypt.compare(Password, user.PasswordHash);
+    if (!isPasswordValid)
+      return res.status(401).json({ message: "Invalid password" });
+
+    // 🟨 Check approval status
+    if (user.IsApproved === 0)
+      return res.status(403).json({ message: "Account not yet approved" });
+
+    // 🧩 Convert RoleID → RoleName
+    let roleName = "User";
+    if (user.RoleID === 1) roleName = "Admin";
+    else if (user.RoleID === 2) roleName = "Resident";
+    else if (user.RoleID === 3) roleName = "Security";
+
+    // 🧩 Normalize capitalization
+    const userRole = roleName.charAt(0).toUpperCase() + roleName.slice(1).toLowerCase();
+
+    // 🧩 Create JWT
+    const token = jwt.sign(
+      {
+        id: user.UserID,
+        username: user.Username,
+        fullName: user.FullName,
+        role: userRole,
+      },
+      process.env.JWT_SECRET || "supersecretkey",
+      { expiresIn: "1h" }
+    );
+
+    // ✅ Return everything frontend needs
+    return res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.UserID,
+        username: user.Username,
+        fullName: user.FullName,
+        role: userRole,
+      },
+    });
+
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error during login." });
+  }
+};

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reports</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <header class="bg-blue-600 text-white p-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-lg font-semibold">Reports</h1>
+      <a href="admindashboard.html" class="bg-white text-blue-600 px-3 py-1 rounded">Back to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+    <section class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Payments Summary</h2>
+      <canvas id="paymentsSummary" class="w-full" style="height:300px;"></canvas>
+      <div id="paymentsStats" class="mt-4"></div>
+    </section>
+
+    <section class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Access Trends</h2>
+      <canvas id="accessTrends" style="height:300px;"></canvas>
+    </section>
+  </main>
+
+  <script src="/js/reports.js"></script>
+</body>
+</html>

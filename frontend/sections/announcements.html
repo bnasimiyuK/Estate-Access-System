@@ -1,0 +1,39 @@
+<div id="header"></div>
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4">Announcements</h2>
+
+  <!-- Form to create new announcement (admin only) -->
+  <form id="announcementForm" class="bg-white p-4 rounded shadow mb-6 hidden">
+    <div class="mb-3">
+      <label class="block font-semibold mb-1">Title</label>
+      <input type="text" id="announcementTitle" class="w-full border p-2 rounded validate-field" data-required="true" data-minlength="3">
+      <p class="form-error text-red-600 text-sm mt-1 hidden"></p>
+    </div>
+    <div class="mb-3">
+      <label class="block font-semibold mb-1">Message</label>
+      <textarea id="announcementMessage" class="w-full border p-2 rounded validate-field" rows="3" data-required="true" data-minlength="5"></textarea>
+      <p class="form-error text-red-600 text-sm mt-1 hidden"></p>
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Post Announcement
+    </button>
+    <p id="formMsg" class="mt-2 text-sm font-semibold"></p>
+  </form>
+
+  <!-- Announcements Table -->
+  <div class="bg-white shadow rounded overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left">Title</th>
+          <th class="px-4 py-2 text-left">Message</th>
+          <th class="px-4 py-2 text-left">Created By</th>
+          <th class="px-4 py-2 text-left">Created At</th>
+          <th class="px-4 py-2 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="announcementsTable" class="bg-white"></tbody>
+    </table>
+  </div>
+</div>
+<script src="js/navbar"></script>

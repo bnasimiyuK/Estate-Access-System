@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visitor Access Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+  <div id="header"></div>
+
+  <div class="flex justify-center mt-4 gap-4">
+    <button id="tabRegister" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Visitor Registration
+    </button>
+
+    <button id="tabPending" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+      Pending Approvals
+    </button>
+
+    <button id="tabApproved" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+      Approved Visitors
+    </button>
+  </div>
+
+  <main class="p-4 max-w-6xl mx-auto mt-4">
+
+    <section id="registerSection">
+      <h2 class="text-lg font-bold mb-4">Register Visitor</h2>
+      <form id="visitorForm" class="space-y-3 bg-white p-4 rounded shadow">
+        <div>
+          <label>Registration Type:</label>
+          <select id="registrationType" class="border p-1 rounded">
+            <option value="single">Single Visitor</option>
+            <option value="group">Group Visit</option>
+          </select>
+        </div>
+        <div id="visitorContainer"></div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700">
+          Submit
+        </button>
+      </form>
+      <p id="msgRegister" class="mt-2 text-center text-red-600"></p>
+    </section>
+
+    <section id="pendingSection" class="hidden mt-8">
+      <h2 class="text-lg font-bold mb-4">Pending Visitor Approvals</h2>
+      <table class="min-w-full border border-gray-300">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-2 px-3 border">Visitor Name</th>
+            <th class="py-2 px-3 border">Resident Name</th>
+            <th class="py-2 px-3 border">House</th>
+            <th class="py-2 px-3 border">Visit Date</th>
+            <th class="py-2 px-3 border">Status</th>
+            <th class="py-2 px-3 border">Approvers</th>
+            <th class="py-2 px-3 border">Action</th>
+          </tr>
+        </thead>
+        <tbody id="requestsTable" class="bg-white"></tbody>
+      </table>
+      <p id="msgPending" class="mt-4 text-center text-sm"></p>
+    </section>
+
+    <section id="approvedSection" class="hidden mt-8">
+      <h2 class="text-lg font-bold mb-4">Approved Visitors</h2>
+      <table class="min-w-full border border-gray-300">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-2 px-3 border">Visitor Name</th>
+            <th class="py-2 px-3 border">Resident Name</th>
+            <th class="py-2 px-3 border">House</th>
+            <th class="py-2 px-3 border">Visit Date</th>
+            <th class="py-2 px-3 border">Access Code</th>
+            <th class="py-2 px-3 border">Visitor Count</th>
+            <th class="py-2 px-3 border">Level1</th>
+            <th class="py-2 px-3 border">Level2</th>
+          </tr>
+        </thead>
+        <tbody id="approvedTableBody" class="bg-white"></tbody>
+      </table>
+      <p id="msgApproved" class="mt-4 text-center text-sm"></p>
+    </section>
+  </main>
+  <script src="js/visitorsaccess.js"></script>
+  <script src="js/navbar.js"></script>
+</body>
+</html>

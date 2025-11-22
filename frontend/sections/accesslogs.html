@@ -1,0 +1,43 @@
+<div id="header"></div>
+<main class="pt-8 px-8 flex flex-col items-center w-full">
+<!-- 🔹 Background Video -->
+<video autoplay muted loop playsinline class="fixed top-0 left-0 w-full h-full object-cover z-[-3]">
+  <source src="assets/Hero.webm" type="video/mp4" />
+</video>
+<div class="overlay fixed top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 to-blue-950/90 z-[-2]"></div>
+  <div class="bg-white p-6 rounded-2xl w-full max-w-6xl shadow-lg border border-gray-200">
+
+    <h2 class="text-2xl font-bold text-blue-600 mb-4 text-center">Recent Access Attempts</h2>
+
+    <!-- Filters -->
+    <div class="flex gap-2 mb-4 flex-wrap">
+      <input id="filterUserId" type="number" placeholder="User ID" class="border px-2 py-1 rounded" />
+      <input id="filterAction" type="text" placeholder="Action" class="border px-2 py-1 rounded" />
+      <input id="filterFrom" type="date" class="border px-2 py-1 rounded" />
+      <input id="filterTo" type="date" class="border px-2 py-1 rounded" />
+      <button id="btnFilter" class="bg-blue-600 text-white px-3 py-1 rounded">Filter</button>
+      <button id="btnReset" class="bg-gray-400 text-white px-3 py-1 rounded">Reset</button>
+      <button id="btnDownloadCSV" class="bg-green-600 text-white px-3 py-1 rounded">Download CSV</button>
+    </div>
+
+    <!-- Access Logs Table -->
+    <table class="w-full text-sm border-collapse">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-2 border">#</th>
+          <th class="p-2 border">User ID</th>
+          <th class="p-2 border">Action</th>
+          <th class="p-2 border">Resource</th>
+          <th class="p-2 border">Date / Time</th>
+          <th class="p-2 border">IP Address</th>
+          <th class="p-2 border">Device</th>
+        </tr>
+      </thead>
+      <tbody id="accessLogsTableBody" class="bg-white text-gray-800"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- JS for this section -->
+<script src="js/accesslogs.js"></script>
+<script src="js/navbar"></script>

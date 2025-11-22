@@ -1,0 +1,231 @@
+console.log("membership.js loaded (PRODUCTION mode)");
+
+// =============================
+// CONFIG
+// =============================
+const USE_MOCK_BACKEND = false; 
+const API_HOST = "http://localhost:4050"; 
+
+// DOM elements
+const membershipForm = document.getElementById("membershipForm");
+const feedbackMessage = document.getElementById("feedbackMessage");
+const membershipCountSpan = document.getElementById("membershipCount");
+const yearSpan = document.getElementById("year");
+
+// Set current year in footer
+if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+// =============================
+// UI HELPER FUNCTIONS 🎨
+// =============================
+
+/**
+ * Updates the UI with a styled message.
+ * @param {string} message - The text content to display.
+ * @param {boolean} isSuccess - True for success (green), false for error (red).
+ * @param {boolean} isPending - True for pending (blue).
+ */
+function updateFeedback(message, isSuccess, isPending = false) {
+    if (feedbackMessage) {
+        feedbackMessage.textContent = message;
+        feedbackMessage.classList.remove("text-red-600", "text-green-600", "text-blue-600");
+        
+        if (isPending) {
+            feedbackMessage.classList.add("text-blue-600");
+        } else if (isSuccess) {
+            feedbackMessage.classList.add("text-green-600");
+        } else {
+            feedbackMessage.classList.add("text-red-600");
+        }
+        feedbackMessage.classList.add("text-sm", "font-medium");
+    }
+}
+
+/** Manages the submit button state. */
+function setButtonState(disabled) {
+    const submitButton = membershipForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = disabled;
+        submitButton.textContent = disabled ? "Processing..." : "Submit Request";
+    }
+}
+
+// =============================
+// FETCH & DISPLAY MEMBERSHIP COUNT
+// =============================
+async function fetchMembershipCount() {
+    if (!membershipCountSpan) return;
+
+    try {
+        // ... (existing count logic)
+        const response = await fetch(`${API_HOST}/api/membership/count`);
+        const data = await response.json();
+
+        if (response.ok) {
+            membershipCountSpan.textContent = data.totalRequests != null ? data.totalRequests : '0';
+        } else {
+            membershipCountSpan.textContent = "Error";
+        }
+        
+    } catch (error) {
+        membershipCountSpan.textContent = "N/A";
+    }
+}
+
+// Call on load
+fetchMembershipCount();
+
+// =============================
+// SUBMIT MEMBERSHIP REQUEST
+// =============================
+if (membershipForm) {
+    membershipForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        console.log("[DEBUG] Form submit clicked");
+
+        if (!feedbackMessage) {
+            console.error("[DEBUG] feedbackMessage element not found in the DOM.");
+            return;
+        }
+        
+        // 1. Initial UI Setup
+        setButtonState(true);
+        updateFeedback("Submitting request to backend...", false, true); // Set pending message (blue)
+
+        // 2. Collect and process data
+        const formData = new FormData(membershipForm);
+        const data = Object.fromEntries(formData.entries());
+        if (data.Action === "") data.Action = null;
+
+        // 3. Client-side Validation (RoleName)
+        if (!data.RoleName || data.RoleName === "") { 
+            updateFeedback("❌ Submission Failed: Please select a valid Role.", false);
+            setButtonState(false);
+            return;
+        }
+
+        try {
+            console.log(`[DEBUG] Sending POST to ${API_HOST}/api/membership`);
+            
+            // 4. Send Request
+            const response = await fetch(`${API_HOST}/api/membership`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            console.log(`[DEBUG] Response received: Status ${response.status}`);
+            let result = {};
+            
+            try {
+                result = await response.json();
+            } catch (err) {
+                // If the server returns a non-JSON response (e.g., HTML error), handle it gracefully
+                console.warn("[DEBUG] Failed to parse response JSON.", err);
+                result = { message: "Server returned an unreadable response." };
+            }
+
+            if (response.ok) {
+                // 5a. Success (HTTP 200-299)
+                updateFeedback(`✅ Success! Membership request has been **RECEIVED** by the backend. Request ID: ${result.requestId || "N/A"}`, true);
+                membershipForm.reset();
+                fetchMembershipCount();
+            } else {
+                // 5b. Server Error (HTTP 4xx/5xx - Backend received it, but rejected it)
+                const errorMessage = result.message || `Server Error (${response.status}): Request received but rejected by the backend.`;
+                updateFeedback(`❌ Submission Failed: ${errorMessage}`, false);
+            }
+
+        } catch (err) {
+            // 5c. Network Error (Request did not reach the backend)
+            console.error("[DEBUG] Network/Fetch error:", err);
+            updateFeedback(
+                `🛑 **CONNECTION FAILURE** 🛑: Request did not reach ${API_HOST}. 
+                Check 1: Is your backend server running? 
+                Check 2: Is your backend configured for CORS (Cross-Origin Resource Sharing)?`, 
+                false
+            );
+        } finally {
+            // 6. Final Cleanup
+            setButtonState(false); // Always re-enable button
+        }
+    });
+} else {
+    console.error("[DEBUG] membershipForm element not found in the DOM.");
+}
+const pendingTableBody = document.getElementById("pendingTableBody"); // <tbody> in HTML
+const pendingCount = document.getElementById("pendingCount"); // optional badge
+
+async function loadPendingRequests() {
+  try {
+    const res = await fetch(`${API_HOST}/api/admin/residents/pending`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+    const pendingRequests = await res.json();
+
+    renderPendingTable(pendingRequests);
+    pendingCount.textContent = pendingRequests.length;
+  } catch (err) {
+    console.error("Error loading pending requests:", err);
+    pendingTableBody.innerHTML = `<tr><td colspan="10" class="text-center text-red-600">Failed to load pending requests</td></tr>`;
+  }
+}
+
+function renderPendingTable(data) {
+  pendingTableBody.innerHTML = "";
+
+  data.forEach((item) => {
+    const row = document.createElement("tr");
+    row.classList.add("border-b");
+
+    row.innerHTML = `
+      <td class="px-4 py-2">${item.RequestID}</td>
+      <td class="px-4 py-2">${item.ResidentName}</td>
+      <td class="px-4 py-2">${item.NationalID}</td>
+      <td class="px-4 py-2">${item.PhoneNumber}</td>
+      <td class="px-4 py-2">${item.Email}</td>
+      <td class="px-4 py-2">${item.HouseNumber}</td>
+      <td class="px-4 py-2">${item.CourtName}</td>
+      <td class="px-4 py-2">${item.RoleName}</td>
+      <td class="px-4 py-2">${item.Status}</td>
+      <td class="px-4 py-2">${item.RequestedAt ? new Date(item.RequestedAt).toLocaleString() : "-"}</td>
+      <td class="px-4 py-2 text-center">
+        <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" onclick="approveRequest(${item.RequestID})">
+          Approve
+        </button>
+      </td>
+    `;
+
+    pendingTableBody.appendChild(row);
+  });
+}
+
+// Optional: approve request action
+async function approveRequest(requestId) {
+  if (!confirm("Approve this membership request?")) return;
+
+  try {
+    const res = await fetch(`${API_HOST}/api/admin/residents/approve/${requestId}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+    alert("Request approved!");
+    loadPendingRequests();
+    loadMembershipRecords(); // refresh main table
+  } catch (err) {
+    console.error("Error approving request:", err);
+    alert("Failed to approve request");
+  }
+}
+
+// Initial load
+window.addEventListener("DOMContentLoaded", () => {
+  loadMembershipRecords(); // existing memberships
+  loadPendingRequests();   // new pending requests
+});

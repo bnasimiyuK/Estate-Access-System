@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership | Athi Estate Access Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Define the custom input-field style, using a smaller p-2 for vertical savings */
+        /* Ensure the body and main content take up minimal screen space */
+        body {
+            min-height: 100vh;
+        }
+        main {
+            /* Adjusted padding to be minimal, maximizing form display area */
+            flex-grow: 1; 
+            padding-top: 3.5rem; /* Sufficient space for fixed header */
+            padding-bottom: 3rem; /* Sufficient space for fixed footer */
+            overflow-y: hidden; /* Hide scrollbar if form almost fills page */
+        }
+    </style>
+</head>
+<body class="text-gray-800 relative flex flex-col min-h-screen">
+
+    <div id="header" class="w-full bg-blue-900 text-white py-3 text-center fixed top-0 z-10">
+        <h1 class="text-lg font-semibold">Athi Estate Access Management System</h1>
+        <p class="text-sm mt-1">
+            Total Membership Requests: <span id="membershipCount" class="font-bold">0</span>
+        </p>
+    </div>
+
+    <video autoplay muted loop playsinline class="fixed top-0 left-0 w-full h-full object-cover -z-10">
+        <source src="assets/Hero.webm" type="video/webm" />
+    </video>
+    <div class="absolute inset-0 bg-black/50 -z-10"></div>
+
+    <main class="flex flex-col justify-center items-center flex-grow gap-4">
+
+        <div class="max-w-lg w-full p-6 text-sm bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl">
+            <h2 class="text-lg font-semibold mb-4 text-center text-blue-800">Membership Request</h2>
+            
+            <form id="membershipForm" class="grid grid-cols-2 gap-x-4 gap-y-3">
+                
+                <div class="col-span-1">
+                    <label for="ResidentName" class="block text-xs font-medium label-black">Full Name</label>
+                    <input type="text" id="ResidentName" name="ResidentName" placeholder="Full Name" required class="input-field" />
+                </div>
+                <div class="col-span-1">
+                    <label for="NationalID" class="block text-xs font-medium label-black">National ID</label>
+                    <input type="text" id="NationalID" name="NationalID" placeholder="8 digits" required class="input-field" />
+                </div>
+                
+                <div class="col-span-1">
+                    <label for="PhoneNumber" class="block text-xs font-medium label-black">Phone Number</label>
+                    <input type="text" id="PhoneNumber" name="PhoneNumber" placeholder="+2547..." required class="input-field" />
+                </div>
+                <div class="col-span-1">
+                    <label for="Email" class="block text-xs font-medium label-black">Email</label>
+                    <input type="email" id="Email" name="Email" placeholder="Email Address" required class="input-field" />
+                </div>
+                
+                <div class="col-span-1">
+                    <label for="CourtName" class="block text-xs font-medium label-black">Court Name</label>
+                    <input type="text" id="CourtName" name="CourtName" placeholder="Court Name" required class="input-field" />
+                </div>
+                <div class="col-span-1">
+                    <label for="HouseNumber" class="block text-xs font-medium label-black">House Number</label>
+                    <input type="text" id="HouseNumber" name="HouseNumber" placeholder="e.g., A101" required class="input-field" />
+                </div>
+
+                <div class="col-span-2">
+                    <label for="RoleName" class="block text-xs font-medium label-black">Select Role</label>
+                    <select id="RoleName" name="RoleName" required class="input-field">
+                        <option value="" disabled selected>Select Your Role</option> 
+                        <option value="Resident">Resident</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Security">Security</option>
+                        <option value="Visitor">Visitor</option>
+                    </select>
+                </div>
+                
+                <div class="col-span-2">
+                    <label for="Action" class="block text-xs font-medium label-black">Optional Notes (Action)</label>
+                    <textarea id="Action" name="Action" placeholder="Optional Notes or Special Request" rows="1" class="input-field"></textarea>
+                </div>
+
+                <div class="col-span-2 mt-2">
+                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-lg font-medium transition">
+                        Submit Request
+                    </button>
+                </div>
+            </form>
+
+            <p id="feedbackMessage" class="mt-3 text-sm text-center"></p>
+            <p class="mt-2 text-xs text-center text-gray-600">
+                Already a member? <a href="login.html" class="text-blue-700 hover:underline">Login</a>
+            </p>
+        </div>
+
+    </main>
+
+    <footer class="w-full bg-blue-900/90 text-white text-center py-2 text-xs fixed bottom-0 z-10">
+        <p>&copy; <span id="year"></span> Athi Estate Access System. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="js/membership.js"></script>
+
+</body>
+</html>

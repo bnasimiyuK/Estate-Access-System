@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pending L2 Approvals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4">
+    <h1 class="text-xl font-bold">Pending L2 Visitor Approvals</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="p-6">
+    <h2 class="text-2xl font-semibold mb-4">Visitors Waiting for L2 Approval</h2>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 border">Visitor Name</th>
+            <th class="p-2 border">Resident ID</th>
+            <th class="p-2 border">Reason</th>
+            <th class="p-2 border">Requested At</th>
+            <th class="p-2 border">Approve</th>
+            <th class="p-2 border">Reject</th>
+          </tr>
+        </thead>
+        <tbody id="pendingL2Table"></tbody>
+      </table>
+    </div>
+
+    <p id="statusMsg" class="mt-4 font-semibold"></p>
+  </div>
+
+  <script src="js/pendingL2Approvals.js"></script>
+</body>
+</html>

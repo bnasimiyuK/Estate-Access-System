@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | Athi Estate Access Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <video autoplay muted loop playsinline>
+    <source src="assets/Hero.webm" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+  <header class="flex justify-between items-center">
+    <a href="home.html" class="logo-link flex items-center space-x-2">
+    <div class="w-10 h-10 bg-white/20 rounded-full overflow-hidden border border-white/30">
+    <img src="assets/Logo.png" alt="Athi Highway Estate Logo" class="object-cover w-full h-full">
+    </div>
+    <span class="text-lg font-bold">Athi Highway Estate</span>
+  </a>
+ <nav>
+  <ul class="flex space-x-3">
+    <li><a href="about-us.html" class="hover:text-blue-300">About Us</a></li>
+    <li><a href="contact.html" class="hover:text-blue-300">Contact</a></li>
+    <li><a href="membership.html" class="hover:text-blue-300">Membership</a></li>
+    <li><a href="services.html" class="hover:text-blue-300">Services</a></li>
+    <li><a href="gallery.html" class="hover:text-blue-300">Gallery</a></li>
+    <li><a href="login.html" class="hover:text-blue-300">Login</a></li>
+    <li>
+      <a href="admin.html" 
+         id="adminPortalLink"
+         class="hidden hover:text-blue-300 transition">
+         Admin Portal
+      </a>
+    </li>
+    <li>
+      <a href="UpdateProfile.html"
+         id="updateProfileLink"
+         class="hidden hover:text-blue-300 transition">
+         Update Profile
+      </a>
+    </li>
+    <li><a href="#" id="logoutBtn" class="hidden hover:text-red-400 transition">Logout</a></li>
+    <li id="userName" class="font-bold text-blue-300"></li>
+  </ul>
+</nav>
+</header>
+<body>
+  <h2>Register Group Access</h2>
+  <form action="RegisterGroupServlet" method="post">
+    <label>Group Name:</label>
+    <input type="text" name="groupName" required><br>
+    <label>Purpose of Visit:</label>
+    <input type="text" name="purpose" required><br>
+    <label>Date of Visit:</label>
+    <input type="date" name="visitDate" required><br>
+    <label>Host (Resident ID):</label>
+    <input type="text" name="hostId" required><br>
+    <h4>Group Members</h4>
+    <textarea name="members" placeholder="Enter names separated by commas" required></textarea><br>
+    <button type="submit">Register Group</button>
+  </form>
+</body>
+</html>

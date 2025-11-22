@@ -1,0 +1,124 @@
+<!-- admin-payments.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Payments | Estate Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; }
+        .data-table th, .data-table td { padding: 4px; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- REQUIRED SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+    <!-- DASHBOARD SUMMARY (Cards at the top) -->
+    <section id="dashboardSummary" class="p-4 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 text-sm w-full"></section>
+
+    <main class="flex-1 overflow-auto p-4 max-w-7xl mx-auto space-y-4 w-full">
+
+        <!-- MPESA PAYMENT SECTION -->
+        <section class="bg-white p-6 rounded-xl shadow-lg col-span-3">
+            <h2 class="text-indigo-700 font-extrabold mb-4 text-xl border-b pb-2">💳 Initiate MPESA Payment (Admin)</h2>
+            <div class="flex flex-col space-y-3 max-w-md">
+                <input type="number" id="residentIdInput" placeholder="Resident ID" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"/>
+                <input type="text" id="serviceName" placeholder="Service Name (e.g. Monthly Dues)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"/>
+                <input type="number" id="paymentAmount" placeholder="Amount (e.g. 5000.00)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"/>
+                <input type="text" id="phoneNumber" placeholder="Phone (2547XXXXXXXX)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"/>
+                <button id="payBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-3 rounded-lg shadow-md transition duration-200">Initiate Payment</button>
+                <div id="paymentResult" class="text-sm mt-2 p-3 rounded-lg hidden"></div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- PAYMENT HISTORY (Pending & Verified) -->
+            <section class="bg-white rounded-xl shadow-lg p-4 col-span-2 flex flex-col">
+                <h3 class="text-indigo-700 font-extrabold mb-3 text-xl border-b pb-2">📋 Payment History (Pending/Verified)</h3>
+                <div class="flex justify-between items-center mb-3 text-sm">
+                    <input type="text" id="filterInput" placeholder="Filter by Resident ID/Name..." class="border rounded-lg px-3 py-1.5 focus:ring-indigo-500 focus:border-indigo-500"/>
+                    <div class="space-x-2">
+                        <button id="exportCsv" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-lg text-white font-medium">Export CSV</button>
+                        <button id="exportExcel" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg text-white font-medium">Export Excel</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto border rounded-lg shadow-inner">
+                    <table id="paymentsTable" class="min-w-full text-xs data-table">
+                        <thead class="bg-indigo-100 text-indigo-800 sticky top-0">
+                            <tr>
+                                <th class="px-3 py-2 text-left">ID</th>
+                                <th class="px-3 py-2 text-left">Res.ID</th>
+                                <th class="px-3 py-2 text-left">Resident Name</th>
+                                <th class="px-3 py-2 text-left">Amount (KES)</th>
+                                <th class="px-3 py-2 text-left">Date</th>
+                                <th class="px-3 py-2 text-left">Status</th>
+                                <th class="px-3 py-2 text-left">Method</th>
+                                <th class="px-3 py-2 text-left">Phone</th>
+                                <th class="px-3 py-2 text-left">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsBody" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- BALANCES -->
+            <section class="bg-white rounded-xl shadow-lg p-4 col-span-1 flex flex-col">
+                <h3 class="text-yellow-700 font-extrabold mb-3 text-xl border-b pb-2">💰 Resident Balances</h3>
+                <div class="flex justify-end mb-3 text-sm space-x-2">
+                    <button id="exportBalancesCsv" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-lg text-white font-medium">CSV</button>
+                    <button id="exportBalancesExcel" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg text-white font-medium">Excel</button>
+                </div>
+                <div class="overflow-x-auto border rounded-lg shadow-inner">
+                    <table id="balanceTable" class="min-w-full text-xs data-table">
+                        <thead class="bg-yellow-100 text-yellow-800 sticky top-0">
+                            <tr>
+                                <th class="px-3 py-2 text-left">Res. Name</th>
+                                <th class="px-3 py-2 text-left">Paid</th>
+                                <th class="px-3 py-2 text-left">Due</th>
+                                <th class="px-3 py-2 text-left">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="balanceBody" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        
+        <!-- VERIFIED PAYMENTS (Separate list for clarity) -->
+        <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col">
+            <h3 class="text-green-700 font-extrabold mb-3 text-xl border-b pb-2">✅ Verified Payment Log</h3>
+            <div class="flex justify-between items-center mb-3 text-sm">
+                <input type="text" id="verifiedFilterInput" placeholder="Filter verified by Resident ID/Name..." class="border rounded-lg px-3 py-1.5 focus:ring-green-500 focus:border-green-500"/>
+                <div class="space-x-2">
+                    <button id="exportVerifiedCsv" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-lg text-white font-medium">CSV</button>
+                    <button id="exportVerifiedExcel" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg text-white font-medium">Excel</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto max-h-96 border rounded-lg shadow-inner">
+                <table id="verifiedTable" class="min-w-full text-xs data-table">
+                    <thead class="bg-green-100 text-green-800 sticky top-0">
+                        <tr>
+                            <th class="px-3 py-2 text-left">ID</th>
+                            <th class="px-3 py-2 text-left">Resident Name</th>
+                            <th class="px-3 py-2 text-left">Amount (KES)</th>
+                            <th class="px-3 py-2 text-left">Reference</th>
+                            <th class="px-3 py-2 text-left">Verified Date</th>
+                            <th class="px-3 py-2 text-left">Receipt No.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="verifiedBody" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPT -->
+    <script src="/js/payment.js"></script>
+</body>
+</html>

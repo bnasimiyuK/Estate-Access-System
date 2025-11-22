@@ -1,0 +1,32 @@
+<!-- sections/residentsVerification.html -->
+<div class="max-w-5xl mx-auto p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">Residents Verification</h2>
+
+  <div class="mb-4">
+    <label class="block text-sm font-medium mb-1">Search by National ID</label>
+    <div class="flex gap-2">
+      <input id="rvSearchId" class="flex-1 p-2 border rounded" placeholder="e.g. 12345678" />
+      <button id="rvSearchBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
+      <button id="rvRefreshBtn" class="bg-gray-200 px-4 py-2 rounded">Refresh</button>
+    </div>
+    <p id="rvMsg" class="text-sm mt-2 hidden text-red-600"></p>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse" id="rvTable">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="border p-2">ResidentID</th>
+          <th class="border p-2">FullName</th>
+          <th class="border p-2">NationalID</th>
+          <th class="border p-2">Phone</th>
+          <th class="border p-2">House</th>
+          <th class="border p-2">Status</th>
+          <th class="border p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rvTableBody"></tbody>
+    </table>
+  </div>
+</div>
+<script src="js/navbar"></script>

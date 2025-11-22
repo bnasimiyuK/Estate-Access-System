@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Residents | Athi Estate Access Management System</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+  <style>
+    thead th {
+      position: sticky;
+      top: 0;
+      background-color: #e5e7eb;
+      z-index: 20;
+    }
+    input.column-filter {
+      width: 100%;
+      font-size: 11px;
+      padding: 2px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+  <div id="header"></div>
+
+  <main class="container mx-auto p-6 relative">
+    <!-- Title & Sync button wrapper -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2 md:mb-0">Residents Records</h1>
+      <button
+        id="syncResidentsBtn"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex items-center gap-2 transition"
+      >
+        🔄 Sync Residents
+      </button>
+    </div>
+
+    <!-- Table container -->
+    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+      <table id="residentsTable" class="min-w-full border border-gray-300 text-sm table-auto">
+        <thead class="bg-gray-200 text-gray-800 uppercase text-xs">
+          <tr>
+            <th>Resident ID<br><input class="column-filter" placeholder="Filter ID"></th>
+            <th>User ID<br><input class="column-filter" placeholder="Filter User ID"></th>
+            <th>Resident Name<br><input class="column-filter" placeholder="Filter Name"></th>
+            <th>National ID<br><input class="column-filter" placeholder="Filter National ID"></th>
+            <th>Phone<br><input class="column-filter" placeholder="Filter Phone"></th>
+            <th>Email<br><input class="column-filter" placeholder="Filter Email"></th>
+            <th>House No.<br><input class="column-filter" placeholder="Filter House No."></th>
+            <th>Court Name<br><input class="column-filter" placeholder="Filter Court"></th>
+            <th>Occupation<br><input class="column-filter" placeholder="Filter Occupation"></th>
+            <th>Date Joined<br><input class="column-filter" placeholder="Filter Date"></th>
+            <th>Status<br><input class="column-filter" placeholder="Filter Status"></th>
+            <th>Role Name<br><input class="column-filter" placeholder="Filter Role"></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-white text-center py-4 mt-10">
+    <p>&copy; 2025 Athi Estate Access Management System</p>
+  </footer>
+
+  <script type="module" src="js/navbar.js"></script>
+  <script type="module" src="js/logout.js"></script>
+  <script type="module" src="js/residents.js"></script>
+</body>
+</html>

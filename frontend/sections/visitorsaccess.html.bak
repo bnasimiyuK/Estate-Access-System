@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visitor Access Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+
+    <h1 class="text-3xl font-bold mb-4">Visitor Access Dashboard</h1>
+
+    <div class="flex mb-4 space-x-2">
+        <button id="tabRegister" class="px-4 py-2 bg-blue-600 text-white rounded">Register</button>
+        <button id="tabPending" class="px-4 py-2 bg-gray-200 text-gray-700 rounded">Pending Approvals</button>
+        <button id="tabApproved" class="px-4 py-2 bg-gray-200 text-gray-700 rounded">Approved Visitors</button>
+    </div>
+
+    <section id="registerSection" class="bg-white p-4 rounded shadow mb-4">
+        <h2 class="text-xl font-bold mb-2">Register Visitor(s)</h2>
+
+        <label class="block mb-2">Registration Type:
+            <select id="registrationType" class="border p-1 rounded">
+                <option value="single">Single</option>
+                <option value="group">Group</option>
+            </select>
+        </label>
+
+        <form id="visitorForm">
+            <div id="visitorContainer">
+                <div class="visitor-entry border p-2 mb-2 rounded">
+                    <input type="text" name="VisitorName[]" placeholder="Visitor Name" class="border p-1 rounded mb-1 w-full" required />
+                    <input type="text" name="NationalID[]" placeholder="National ID" class="border p-1 rounded mb-1 w-full" required />
+                    <input type="text" name="PhoneNumber[]" placeholder="Phone (+254...)" class="border p-1 rounded mb-1 w-full" required />
+                    <input type="text" name="VehicleNumber[]" placeholder="Vehicle Number" class="border p-1 rounded mb-1 w-full" />
+                    <textarea name="Purpose[]" placeholder="Purpose of Visit" class="border p-1 rounded mb-1 w-full" required></textarea>
+                    <input type="datetime-local" name="DateOfVisit[]" class="border p-1 rounded mb-1 w-full" required />
+                    <button type="button" class="removeVisitorBtn bg-red-500 text-white px-2 py-1 rounded hidden">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="addVisitorBtn" class="bg-green-500 text-white px-3 py-1 rounded mb-2 hidden">Add Visitor</button>
+            <div class="mb-2 text-red-600" id="msgRegister"></div>
+            <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded">Submit Registration</button>
+        </form>
+    </section>
+
+    <section id="pendingSection" class="hidden bg-white p-4 rounded shadow mb-4">
+        <h2 class="text-xl font-bold mb-2">Pending Approvals</h2>
+        <table class="w-full border-collapse border">
+            <thead>
+                <tr>
+                    <th class="border px-2 py-1">Visitor</th>
+                    <th class="border px-2 py-1">Resident</th>
+                    <th class="border px-2 py-1">House</th>
+                    <th class="border px-2 py-1">Visit Date</th>
+                    <th class="border px-2 py-1">Status</th>
+                    <th class="border px-2 py-1">Approvers</th>
+                    <th class="border px-2 py-1">Action</th>
+                </tr>
+            </thead>
+            <tbody id="requestsTable">
+                <tr><td colspan="7" class="text-center py-2">No data</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="approvedSection" class="hidden bg-white p-4 rounded shadow">
+        <h2 class="text-xl font-bold mb-2">Approved Visitors</h2>
+        <table class="w-full border-collapse border">
+            <thead>
+                <tr>
+                    <th class="border px-2 py-1">Visitor</th>
+                    <th class="border px-2 py-1">Resident</th>
+                    <th class="border px-2 py-1">House</th>
+                    <th class="border px-2 py-1">Visit Date</th>
+                    <th class="border px-2 py-1">Access Code</th>
+                    <th class="border px-2 py-1">Allowed Visitors</th>
+                    <th class="border px-2 py-1">L1 Approved By</th>
+                    <th class="border px-2 py-1">L2 Approved By</th>
+                </tr>
+            </thead>
+            <tbody id="approvedTableBody">
+                <tr><td colspan="8" class="text-center py-2">No data</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script src="js/visitorsaccess.js"></script>
+</body>
+</html>

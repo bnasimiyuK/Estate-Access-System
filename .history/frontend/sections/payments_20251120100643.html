@@ -1,0 +1,106 @@
+<!-- REQUIRED SCRIPTS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+<!-- DASHBOARD SUMMARY -->
+<section id="dashboardSummary" class="p-2 max-w-7xl mx-auto grid grid-cols-3 gap-2 text-xs mb-2 w-full"></section>
+
+<main class="flex-1 overflow-auto p-2 max-w-7xl mx-auto grid grid-cols-3 gap-2 text-xs w-full">
+
+    <!-- MPESA PAYMENT -->
+    <section class="bg-white p-4 rounded-xl shadow col-span-3">
+        <h2 class="text-indigo-700 font-bold mb-2 text-sm">💳 MPESA Payment</h2>
+        <div class="flex flex-col space-y-2 max-w-sm">
+            <input type="text" id="serviceName" placeholder="Service Name (e.g Estate Registration)" class="border p-2 rounded"/>
+            <input type="number" id="paymentAmount" placeholder="Amount" class="border p-2 rounded"/>
+            <input type="text" id="phoneNumber" placeholder="Phone (2547XXXXXXXX)" class="border p-2 rounded"/>
+            <button id="payBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">Pay Now</button>
+            <div id="paymentResult" class="text-xs mt-1"></div>
+        </div>
+    </section>
+
+    <!-- PAYMENT HISTORY -->
+    <section class="bg-white rounded-xl shadow p-2 col-span-2 flex flex-col">
+        <h3 class="text-indigo-700 font-semibold mb-1 text-sm">📋 Payment History</h3>
+        <div class="flex justify-between mb-1 text-xs">
+            <input type="text" id="filterInput" placeholder="Filter by Resident ID" class="border rounded px-1 py-1"/>
+            <div class="space-x-1">
+                <button id="exportCsv" class="bg-green-500 hover:bg-green-600 px-2 py-0.5 rounded text-white">CSV</button>
+                <button id="exportExcel" class="bg-blue-500 hover:bg-blue-600 px-2 py-0.5 rounded text-white">Excel</button>
+            </div>
+        </div>
+        <div class="overflow-auto max-h-60 border rounded">
+            <table id="paymentsTable" class="min-w-full text-xs">
+                <thead class="bg-indigo-100 text-indigo-800 sticky top-0">
+                    <tr>
+                        <th class="px-1 py-0.5 text-left">PaymentID</th>
+                        <th class="px-1 py-0.5 text-left">ResidentID</th>
+                        <th class="px-1 py-0.5 text-left">Amount</th>
+                        <th class="px-1 py-0.5 text-left">Payment Date</th>
+                        <th class="px-1 py-0.5 text-left">Status</th>
+                        <th class="px-1 py-0.5 text-left">Reference</th>
+                        <th class="px-1 py-0.5 text-left">PaymentMethod</th>
+                        <th class="px-1 py-0.5 text-left">Action</th>
+                        <th class="px-1 py-0.5 text-left">NationalID</th>
+                        <th class="px-1 py-0.5 text-left">serviceName</th>
+                        <th class="px-1 py-0.5 text-left">phoneNumber</th>
+                        <th class="px-1 py-0.5 text-left">VerifiedDate</th>
+                    </tr>
+                </thead>
+                <tbody id="paymentsBody" class="divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- VERIFIED PAYMENTS -->
+    <section class="bg-white rounded-xl shadow p-2 col-span-3 flex flex-col">
+        <h3 class="text-green-700 font-semibold mb-1 text-sm">✅ Verified Payments</h3>
+        <div class="flex justify-between mb-1 text-xs">
+            <input type="text" id="verifiedFilterInput" placeholder="Filter by Resident ID" class="border rounded px-1 py-1"/>
+            <div class="space-x-1">
+                <button id="exportVerifiedCsv" class="bg-green-500 hover:bg-green-600 px-2 py-0.5 rounded text-white">CSV</button>
+                <button id="exportVerifiedExcel" class="bg-blue-500 hover:bg-blue-600 px-2 py-0.5 rounded text-white">Excel</button>
+            </div>
+        </div>
+        <div class="overflow-auto max-h-40 border rounded">
+            <table id="verifiedTable" class="min-w-full text-xs">
+                <thead class="bg-green-100 text-green-800 sticky top-0">
+                    <tr>
+                        <th class="px-1 py-0.5 text-left">Resident</th>
+                        <th class="px-1 py-0.5 text-left">Amount</th>
+                        <th class="px-1 py-0.5 text-left">Reference</th>
+                        <th class="px-1 py-0.5 text-left">Verified Date</th>
+                    </tr>
+                </thead>
+                <tbody id="verifiedBody" class="divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BALANCES -->
+    <section class="bg-white rounded-xl shadow p-2 col-span-3 flex flex-col">
+        <h3 class="text-yellow-700 font-semibold mb-1 text-sm">💰 Balances</h3>
+        <div class="flex justify-end mb-1 text-xs space-x-1">
+            <button id="exportBalancesCsv" class="bg-green-500 hover:bg-green-600 px-2 py-0.5 rounded text-white">CSV</button>
+            <button id="exportBalancesExcel" class="bg-blue-500 hover:bg-blue-600 px-2 py-0.5 rounded text-white">Excel</button>
+        </div>
+        <div class="overflow-auto max-h-40 border rounded">
+            <table id="balanceTable" class="min-w-full text-xs">
+                <thead class="bg-yellow-100 text-yellow-800 sticky top-0">
+                    <tr>
+                        <th class="px-1 py-0.5 text-left">ResidentName</th>
+                        <th class="px-1 py-0.5 text-left">Total Paid</th>
+                        <th class="px-1 py-0.5 text-left">Total Due</th>
+                        <th class="px-1 py-0.5 text-left">Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="balanceBody" class="divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<!-- SCRIPT -->
+<script src="js/payment.js"></script>

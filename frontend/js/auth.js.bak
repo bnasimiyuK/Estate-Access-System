@@ -1,0 +1,157 @@
+// frontend/js/auth.js
+// 
+
+// import("./main.js").catch(() => {});
+
+// 2. Define base API URL
+const base = "http://localhost:4050/api";
+
+// Wait until DOM is fully loaded before accessing forms
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("📘 auth.js loaded");
+
+  // Grab form elements
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+  const adminLoginForm = document.getElementById("adminLoginForm");
+
+  
+  // 🧾 Resident Registration
+    if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const resident = {
+        FullName: document.getElementById("regFullName").value.trim(),
+        Email: document.getElementById("regEmail").value.trim(),
+        Password: document.getElementById("regPassword").value,
+        HouseNumber: document.getElementById("regHouse").value.trim(),
+      };
+
+      try {
+        const res = await fetch(`${base}/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(resident),
+        });
+
+        if (!res.ok) throw new Error("Registration failed");
+
+        alert("✅ Registered successfully. Please log in.");
+        window.location.href = "login.html";
+      } catch (err) {
+        alert(err.message || "Error during registration");
+      }
+    });
+  }
+
+  // ===============================
+  // 👤 Resident Login
+  // ===============================
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const credentials = {
+        Email: document.getElementById("loginEmail").value.trim(),
+        Password: document.getElementById("loginPassword").value,
+      };
+
+      try {
+        const res = await fetch(`${base}/auth/resident/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(credentials),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Login failed");
+
+        // Store tokens
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("resident", JSON.stringify(data));
+
+        alert("✅ Login successful!");
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        alert(err.message || "Login error");
+      }
+    });
+  }
+
+  // ===============================
+  // 🧑‍💼 Admin Login
+  // ===============================
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const admin = {
+        Email: document.getElementById("adminEmail").value.trim(),
+        Password: document.getElementById("adminPassword").value,
+      };
+
+      try {
+        const res = await fetch(`${base}/auth/admin/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(admin),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Admin login failed");
+
+        // Store tokens
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("admin", JSON.stringify(data));
+
+        alert("✅ Admin login successful!");
+        window.location.href = "admin-dashboard.html";
+      } catch (err) {
+        alert(err.message || "Admin login error");
+      }
+    });
+  }
+});
+
+// ===============================
+// 🔐 Secure Fetch with Token Refresh
+// ===============================
+export async function fetchWithAuth(url, options = {}) {
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  if (!options.headers) options.headers = {};
+  if (accessToken) options.headers["Authorization"] = `Bearer ${accessToken}`;
+
+  let response = await fetch(url, options);
+
+  // 🟡 Handle expired token (401)
+  if (response.status === 401 && refreshToken) {
+    const refreshRes = await fetch(`${base}/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (refreshRes.ok) {
+      const data = await refreshRes.json();
+
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      // Retry the original request
+      options.headers["Authorization"] = `Bearer ${data.accessToken}`;
+      response = await fetch(url, options);
+    } else {
+      // Refresh failed → force logout
+      localStorage.clear();
+      window.location.href = "/login.html";
+      return;
+    }
+  }
+
+  return response;
+}

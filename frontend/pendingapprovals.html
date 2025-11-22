@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pending Approvals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+    <div id="header"></div>
+  <!-- Sidebar same as above -->
+  <aside class="bg-blue-700 text-white w-64 min-h-screen p-4 fixed left-0 top-0">
+    <h2 class="text-xl font-bold mb-6">Security Dashboard</h2>
+    <nav class="flex flex-col gap-2">
+      <a href="residentverification.html" class="p-2 rounded hover:bg-blue-600">Resident Verification</a>
+      <a href="visitorscheckin.html" class="p-2 rounded hover:bg-blue-600">Visitor Check-In</a>
+      <a href="visitorcheckout.html" class="p-2 rounded hover:bg-blue-600">Visitor Check-Out</a>
+      <a href="pendingapprovals.html" class="p-2 rounded hover:bg-blue-600">Pending Approvals</a>
+      <a href="accesslogs.html" class="p-2 rounded hover:bg-blue-600">Access Logs</a>
+      <a href="reports.html" class="p-2 rounded hover:bg-blue-600">Reports</a>
+    </nav>
+  </aside>
+
+  <main class="flex-1 ml-64 p-6">
+    <h1 class="text-2xl font-bold mb-4">Pending L2 Approvals</h1>
+    <table class="min-w-full border border-gray-300">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="py-2 px-3 border">Visitor Name</th>
+          <th class="py-2 px-3 border">Resident</th>
+          <th class="py-2 px-3 border">Date of Visit</th>
+          <th class="py-2 px-3 border">Access Code</th>
+          <th class="py-2 px-3 border">Action</th>
+        </tr>
+      </thead>
+      <tbody id="pendingTable" class="bg-white"></tbody>
+    </table>
+  </main>
+
+  <script src="js/pending-approvals.js"></script>
+  <script src="js/navbar.js"></script>
+</body>
+</html>

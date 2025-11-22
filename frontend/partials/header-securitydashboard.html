@@ -1,0 +1,50 @@
+<!-- ✅ Security Dashboard Header -->
+<nav class="bg-gray-800 text-white flex justify-between items-center px-6 py-3 shadow-md fixed top-0 left-0 w-full z-50">
+  <!-- Logo -->
+  <div class="flex items-center gap-2">
+    <div class="w-10 h-10 bg-white/20 rounded-full overflow-hidden border border-white/30">
+      <img src="assets/Logo.png" alt="Athi Estate Logo" class="object-cover w-full h-full" />
+    </div>
+    <span class="font-semibold text-lg text-yellow-400">Athi Estate</span>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex items-center gap-6">
+    <button id="securityMenu" class="hover:text-yellow-400">Security Dashboard</button>
+    <button id="servicesBtn" class="hover:text-yellow-400">Services</button>
+  </div>
+
+  <!-- Profile -->
+  <div class="relative" id="profileMenu">
+    <button id="profileBtn" class="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-lg transition">
+      <span id="usernameDisplay" class="text-yellow-300">Security</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg hidden z-50">
+      <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100">My Profile</a>
+      <button id="logoutBtn" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="h-16"></div>
+<div id="sidebarOverlay" class="fixed inset-0 bg-black/40 hidden z-40"></div>
+
+<!-- Sidebar for Security Links -->
+<aside id="sidebarMenu" class="fixed top-0 left-0 w-64 h-full bg-gray-800 text-white transform -translate-x-full transition-transform duration-300 ease-in-out z-50 shadow-xl">
+  <div class="flex justify-between items-center px-4 py-4 border-b border-gray-700">
+    <h2 id="sidebarTitle" class="text-lg font-semibold text-yellow-400">Security Dashboard</h2>
+    <button onclick="closeSidebar()" class="text-gray-400 hover:text-white text-xl">&times;</button>
+  </div>
+  <div id="sidebarLinks" class="flex flex-col mt-2">
+    <a href="securityaccesscontrol.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">Access Control</a>
+    <a href="guardpatrol.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">Guard & Patrol Management</a>
+    <a href="accesslogs.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">Incident Management</a>
+    <a href="securitymetrics.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">Security Metrics & Alerts</a>
+    <a href="cctv.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">CCTV & IoT Monitoring</a>
+    <a href="announcements.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">Notifications & Communications</a>
+    <a href="reports.html" class="block px-6 py-3 hover:bg-gray-700 hover:text-yellow-400">Reports & Analysis</a>
+  </div>
+</aside>

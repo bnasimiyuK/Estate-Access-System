@@ -1,0 +1,49 @@
+AthiHighwayEstate/
+│
+├── index.html                <-- (optional: landing redirect to home.html)
+├── home.html                 <-- main landing page
+├── about-us.html
+├── contact.html
+├── membership.html
+├── login.html
+├── profile.html
+├── adminportal.html
+├── UpdateProfile.html
+│
+├── partials/
+│   └── header.html           <-- shared header (with profile dropdown + script)
+│
+├── assets/
+│   ├── Logo.png
+│   ├── profile-icon.png
+│   ├── Hero.webm
+│   ├── Hero-video.mp4
+│   ├── bg-video.mp4
+│   └── gallery/
+│       ├── Clubhouse.jpg
+│       ├── Orchard.jpg
+│       └── Mango.jpg
+│
+├── css/
+│   └── styles.css            <-- global Tailwind and custom CSS overrides
+│
+├── js/
+│   ├── main.js               <-- general scripts for scrolling, modals, etc.
+│   ├── gallery.js            <-- gallery/video modal logic
+│   ├── navbar.js             <-- header login/logout/profile/admin logic
+│   ├── logout.js             <-- (optional; you can merge this into navbar.js)
+│   ├── auth.js               <-- handles login, token storage, and verification
+│   └── api/
+│       └── visitors.js       <-- handles visitor registration API calls
+│
+└── backend/
+    ├── server.js
+    ├── dbConfig.js
+    ├── routes/
+    │   ├── userRoutes.js
+    │   ├── visitorRoutes.js
+    │   └── authRoutes.js
+    └── controllers/
+        ├── userController.js
+        ├── visitorController.js
+        └── authController.js

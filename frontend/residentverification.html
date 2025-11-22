@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Resident Verification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <header class="bg-blue-600 text-white p-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-lg font-semibold">Resident Verification</h1>
+      <a href="admindashboard.html" class="bg-white text-blue-600 px-3 py-1 rounded">Back to Dashboard</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6">
+    <section class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Search & Verify Residents</h2>
+
+      <div class="flex gap-2 items-center mb-4">
+        <input id="rvSearch" placeholder="Search by name or resident ID" class="border p-2 rounded flex-1" />
+        <button id="rvSearchBtn" class="bg-blue-600 text-white px-3 py-2 rounded">Search</button>
+      </div>
+
+      <div id="rvMessage" class="mb-4"></div>
+
+      <table class="min-w-full border" id="rvTable">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 border">Resident ID</th>
+            <th class="p-2 border">Name</th>
+            <th class="p-2 border">Phone</th>
+            <th class="p-2 border">Status</th>
+            <th class="p-2 border">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rvTableBody">
+          <!-- rows inserted by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/js/residentverification.js"></script>
+</body>
+</html>

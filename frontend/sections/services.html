@@ -1,0 +1,65 @@
+<!-- 🔹 Background Video -->
+<video autoplay muted loop playsinline class="fixed top-0 left-0 w-full h-full object-cover z-[-3]">
+  <source src="assets/Hero.webm" type="video/mp4" />
+</video>
+<div class="overlay fixed top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 to-blue-950/90 z-[-2]"></div>
+
+<div id="header"></div>
+
+<!-- 🔹 Main Content -->
+<main class="flex-grow flex justify-center items-center px-6 py-10">
+  <div class="max-w-7xl w-full">
+    <h1 class="text-3xl font-bold text-center text-blue-400 mb-10 tracking-wide">
+      Our Services
+    </h1>
+
+    <!-- Service Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="service-card bg-white/5 border border-white/15 rounded-xl p-6 backdrop-blur-sm shadow hover:shadow-lg hover:-translate-y-1 transition-transform">
+        <h2 class="text-lg font-semibold text-blue-300 mb-2">Visitor Pre-Approval</h2>
+        <p class="text-slate-200 text-sm mb-3">
+          Approve or reject visitor requests before arrival to ensure smooth estate entry.
+        </p>
+        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm">View</a>
+      </div>
+
+      <div class="service-card bg-white/5 border border-white/15 rounded-xl p-6 backdrop-blur-sm shadow hover:shadow-lg hover:-translate-y-1 transition-transform">
+        <h2 class="text-lg font-semibold text-blue-300 mb-2">Payment Status</h2>
+        <p class="text-slate-200 text-sm mb-3">
+          Automatically verify resident payment status and manage records securely.
+        </p>
+        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm">View</a>
+      </div>
+
+      <div class="service-card bg-white/5 border border-white/15 rounded-xl p-6 backdrop-blur-sm shadow hover:shadow-lg hover:-translate-y-1 transition-transform">
+        <h2 class="text-lg font-semibold text-blue-300 mb-2">Estate Announcements</h2>
+        <p class="text-slate-200 text-sm mb-3">
+          Stay updated with important announcements and community events.
+        </p>
+        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm">View</a>
+      </div>
+
+      <div class="service-card bg-white/5 border border-white/15 rounded-xl p-6 backdrop-blur-sm shadow hover:shadow-lg hover:-translate-y-1 transition-transform">
+        <h2 class="text-lg font-semibold text-blue-300 mb-2">Security Dashboard</h2>
+        <p class="text-slate-200 text-sm mb-3">
+          Monitor gate access, visitor logs, and real-time estate activity.
+        </p>
+        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full text-sm">View</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- 🔹 Footer -->
+<footer class="bg-blue-900 text-white text-center py-3 text-sm">
+  <p>&copy; <span id="year"></span> Athi Estate Access System. All rights reserved.</p>
+</footer>
+
+<!-- 🔹 Slide-in Sidebar for Service Details -->
+<div id="serviceSidebar" class="fixed top-0 left-0 w-72 h-full bg-blue-950/95 text-white transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl z-100">
+  <div class="flex items-center justify-between px-4 py-3 border-b border-blue-800">
+    <h2 id="sidebarTitle" class="text-lg font-semibold text-blue-300">Service</h2>
+    <button id="closeSidebar" class="text-xl hover:text-blue-400">&times;</button>
+  </div>
+  <div id="sidebarContent" class="p-4 space-y-2"></div>
+</div>

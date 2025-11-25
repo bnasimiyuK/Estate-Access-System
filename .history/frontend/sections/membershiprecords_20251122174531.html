@@ -1,0 +1,82 @@
+<div id="header" class="w-full bg-blue-900 text-white py-3 text-center">
+  <h1 class="text-lg font-semibold">Athi Estate Access Management System</h1>
+</div>
+
+<main class="p-8">
+  <section class="mb-8">
+    <h1 class="text-3xl font-semibold text-blue-800 mb-6 border-b-2 border-blue-500 pb-2">
+      Membership Records
+    </h1>
+
+    <div id="msg" class="text-sm text-gray-700 mb-3"></div>
+
+    <div class="flex flex-wrap items-center justify-between mb-4 text-sm text-gray-700">
+      <p>Total Membership Records: <span id="membershipCount" class="font-bold text-blue-700">0</span></p>
+      <p>Status: <span id="statusLabel" class="font-semibold text-blue-600">All</span></p>
+      <p>Last Update: <span id="actionText" class="font-semibold text-green-600">Loading...</span></p>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center gap-4 mb-4">
+      <select id="requestIdFilter" class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring focus:border-blue-500">
+        <option value="">All Request IDs</option>
+      </select>
+      <select id="residentFilter" class="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring focus:border-blue-500">
+        <option value="">All Residents</option>
+      </select>
+      <button id="clearFilterBtn" class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">
+        Clear Filters
+      </button>
+    </div>
+
+    <!-- Membership Records Table -->
+    <div class="bg-white rounded-xl border border-gray-300 shadow-md p-6 overflow-x-auto mb-6">
+      <table class="w-full text-sm text-left">
+        <thead>
+          <tr class="bg-blue-700 text-white">
+            <th class="px-4 py-3">RequestID</th>
+            <th class="px-4 py-3">ResidentName</th>
+            <th class="px-4 py-3">NationalID</th>
+            <th class="px-4 py-3">PhoneNumber</th>
+            <th class="px-4 py-3">Email</th>
+            <th class="px-4 py-3">HouseNumber</th>
+            <th class="px-4 py-3">CourtName</th>
+            <th class="px-4 py-3">RoleName</th>
+            <th class="px-4 py-3">Status</th>
+            <th class="px-4 py-3">RequestedAt</th>
+            <th class="px-4 py-3">ApprovedAt</th>
+            <th class="px-4 py-3 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="membershipTableBody" class="text-gray-700"></tbody>
+      </table>
+    </div>
+
+    <!-- Approved Residents Table -->
+    <div class="bg-white rounded-xl border border-gray-300 shadow-md p-6 overflow-x-auto">
+      <h2 class="text-xl font-semibold text-blue-800 mb-3">Approved Residents</h2>
+      <table class="w-full text-sm text-left">
+        <thead>
+          <tr class="bg-green-700 text-white">
+            <th class="px-4 py-3">ResidentName</th>
+            <th class="px-4 py-3">NationalID</th>
+            <th class="px-4 py-3">PhoneNumber</th>
+            <th class="px-4 py-3">Email</th>
+            <th class="px-4 py-3">HouseNumber</th>
+            <th class="px-4 py-3">CourtName</th>
+          </tr>
+        </thead>
+        <tbody id="residentsTableBody" class="text-gray-700"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="mt-8 text-center text-gray-500 text-sm">
+    &copy; <span id="year"></span> Athi Highway Estate Access Management System
+  </footer>
+</main>
+
+<script src="js/membershiprecords.js" defer></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>

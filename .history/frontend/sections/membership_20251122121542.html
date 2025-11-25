@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h2 class="text-xl font-bold mb-4 text-center">Membership Request</h2>
+
+    <form id="membershipForm" class="space-y-4">
+
+        <div>
+            <label for="ResidentName" class="block font-medium text-black">Full Name</label>
+            <input type="text" id="ResidentName" name="ResidentName"
+                placeholder="Full Name"
+                pattern="^[A-Za-z ]{2,}$"
+                title="Full name should contain only letters"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required />
+        </div>
+
+        <div>
+            <label for="NationalID" class="block font-medium text-black">National ID</label>
+            <input type="text" id="NationalID" name="NationalID"
+                placeholder="8 digits"
+                pattern="^[0-9]{8}$"
+                title="National ID must be exactly 8 digits"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required />
+        </div>
+
+        <div>
+            <label for="PhoneNumber" class="block font-medium text-black">Phone Number</label>
+            <input type="text" id="PhoneNumber" name="PhoneNumber"
+                placeholder="+2547..."
+                pattern="^(\+2547\d{8}|07\d{8})$"
+                title="Phone number must be +2547XXXXXXXX or 07XXXXXXXX"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required />
+        </div>
+
+        <div>
+            <label for="Email" class="block font-medium text-black">Email</label>
+            <input type="email" id="Email" name="Email"
+                placeholder="Email Address"
+                title="Enter a valid email address"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required />
+        </div>
+
+        <div>
+            <label for="HouseNumber" class="block font-medium text-black">House Number</label>
+            <input type="text" id="HouseNumber" name="HouseNumber"
+                placeholder="House Number"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required />
+        </div>
+
+        <div>
+            <label for="CourtName" class="block font-medium text-black">Court Name</label>
+            <select id="CourtName" name="CourtName"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required>
+                <option value="">Select Court</option>
+                <option value="A Court">A Court</option>
+                <option value="B Court">B Court</option>
+                <option value="C Court">C Court</option>
+                <option value="D Court">D Court</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="RoleName" class="block font-medium text-black">Your Role</label>
+            <select id="RoleName" name="RoleName"
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"
+                required>
+                <option value="">Select Your Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Resident">Resident</option>
+                <option value="Visitor">Visitor</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="Action" class="block font-medium text-black">Notes/Reason (Optional)</label>
+            <textarea id="Action" name="Action"
+                placeholder="e.g., Requesting membership for a new property owner."
+                class="w-full px-2 py-1.5 border border-gray-300 rounded-lg text-sm text-black"></textarea>
+        </div>
+
+
+        <button type="submit"
+            class="w-full bg-blue-900 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-800">
+            Submit Request
+        </button>
+    </form>
+
+    <p id="feedbackMessage" class="mt-4 text-center"></p>
+
+</div>
+<script type="module" src=/js/membership.js></script>

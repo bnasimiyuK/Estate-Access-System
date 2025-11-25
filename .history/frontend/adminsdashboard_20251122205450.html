@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header>
+    <h1>Admin Dashboard</h1>
+    <button id="logoutBtn">Logout</button>
+</header>
+
+<section>
+    <h2>Summary</h2>
+    <div>Total Residents: <span id="totalResidents">0</span></div>
+    <div>Pending Payments: <span id="pendingPayments">0</span></div>
+    <div>Compliance: <span id="compliancePct">0%</span></div>
+    <div>Overrides: <span id="overrideCount">0</span></div>
+</section>
+
+<section>
+    <h2>Access Chart</h2>
+    <canvas id="accessChart"></canvas>
+</section>
+
+<section>
+    <h2>Pending Requests</h2>
+    <table border="1">
+        <tbody id="membershipTableBody"></tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Approved Residents</h2>
+    <table border="1">
+        <tbody id="residentsTableBody"></tbody>
+    </table>
+</section>
+
+<div id="msg"></div>
+
+<script src="/js/adminsdashboard.js"></script>
+</body>
+</html>

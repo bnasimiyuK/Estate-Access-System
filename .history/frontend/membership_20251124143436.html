@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership Request Form</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8 min-h-screen flex items-center justify-center">
+
+<div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg card">
+    <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Membership Request</h2>
+    
+    <div class="mb-6 p-4 bg-indigo-50 rounded-lg flex items-center justify-center space-x-4">
+        <span class="text-lg font-semibold text-indigo-700">Membership Count:</span>
+        <span id="membershipCount" class="text-2xl font-extrabold text-indigo-900">...</span>
+    </div>
+
+    <form id="membershipForm" class="space-y-4">
+
+        <div>
+            <label for="ResidentName" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input type="text" id="ResidentName" name="ResidentName" placeholder="Full Name" pattern="^[A-Za-z ]{2,}$" required
+                class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+
+        <div>
+            <label for="NationalID" class="block text-sm font-medium text-gray-700">National ID</label>
+            <input type="text" id="NationalID" name="NationalID" placeholder="8 digits" pattern="^[0-9]{8}$" required
+                class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+
+        <div>
+            <label for="PhoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input type="text" id="PhoneNumber" name="PhoneNumber" placeholder="+2547XXXXXXXX" pattern="^(\+2547\d{8}|07\d{8})$" required
+                class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+
+        <div>
+            <label for="Email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="Email" name="Email" placeholder="Email Address" required
+                class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+
+        <div>
+            <label for="HouseNumber" class="block text-sm font-medium text-gray-700">House Number</label>
+            <input type="text" id="HouseNumber" name="HouseNumber" placeholder="House Number" required
+                class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+
+        <div>
+            <label for="CourtName" class="block text-sm font-medium text-gray-700">Court Name</label>
+            <select id="courtDropdown">
+    <option value="">Select a court</option>
+</select>
+
+        </div>
+
+        <div>
+            <label for="RoleName" class="block text-sm font-medium text-gray-700">Your Role</label>
+            <select id="RoleName" name="RoleName" required class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">Select Your Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Resident">Resident</option>
+                <option value="Visitor">Visitor</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="Action" class="block text-sm font-medium text-gray-700">Notes/Reason (Optional)</label>
+            <textarea id="Action" name="Action" rows="3" placeholder="Notes/reason"
+                class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700">
+            Submit Request
+        </button>
+    </form>
+
+    <p id="feedbackMessage" class="mt-4 text-center p-3 rounded-lg"></p>
+</div>
+
+<script type="module" src="js/membership.js"></script>
+</body>
+</html>

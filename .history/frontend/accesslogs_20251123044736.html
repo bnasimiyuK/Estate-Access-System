@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Logs</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f6f8;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .filter-box {
+            margin-bottom: 15px;
+        }
+
+        input[type="date"] {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e40af;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #eef2ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Access Logs</h1>
+
+    <div class="filter-box">
+        <input type="date" id="fromDate" />
+        <input type="date" id="toDate" />
+        <button id="filterBtn">Filter</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Timestamp</th>
+                <th>User ID</th>
+                <th>Action</th>
+                <th>Resource</th>
+                <th>IP Address</th>
+                <th>User Agent</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody id="logsTableBody">
+            <!-- Rows load from accesslogs.js -->
+        </tbody>
+    </table>
+
+    <script src="js/accesslogs.js"></script>
+
+</body>
+</html>

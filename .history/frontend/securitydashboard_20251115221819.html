@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Dashboard | Level 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-green-600 text-white p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Security Dashboard (Level 2)</h1>
+    <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600">Logout</button>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white min-h-screen p-4">
+      <nav class="flex flex-col space-y-2">
+        <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="accessLogs">Access Logs</button>
+        <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="visitorApprovals">Visitor Approvals</button>
+        <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="manualGate">Manual Gate Control</button>
+        <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="reportsAnalysis">Reports & Analysis</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      
+      <!-- Access Logs -->
+      <div id="accessLogs" class="tabContent hidden">
+        <h2 class="text-2xl font-bold mb-4">Access Logs</h2>
+        <table class="min-w-full border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border">Timestamp</th>
+              <th class="p-2 border">Resident/Visitor</th>
+              <th class="p-2 border">Type</th>
+              <th class="p-2 border">Status</th>
+            </tr>
+          </thead>
+          <tbody id="logsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Visitor Approvals -->
+      <div id="visitorApprovals" class="tabContent hidden">
+        <h2 class="text-2xl font-bold mb-4">Visitor Approvals</h2>
+        <div id="visitorRequestList" class="space-y-2"></div>
+      </div>
+
+      <!-- Manual Gate Control -->
+      <div id="manualGate" class="tabContent hidden">
+        <h2 class="text-2xl font-bold mb-4">Manual Gate Control</h2>
+        <input type="text" id="gateResidentId" placeholder="Resident ID" class="border p-2 rounded mb-2 w-full max-w-sm">
+        <input type="text" id="gateVisitorId" placeholder="Visitor ID (optional)" class="border p-2 rounded mb-2 w-full max-w-sm">
+        <button id="openGateBtn" class="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700">Open Gate</button>
+        <div id="gateStatus" class="mt-4"></div>
+      </div>
+
+      <!-- Reports & Analysis -->
+      <div id="reportsAnalysis" class="tabContent hidden">
+        <h2 class="text-2xl font-bold mb-4">Reports & Analysis</h2>
+        <canvas id="dailyAccessChart" class="mb-6"></canvas>
+        <canvas id="monthlyAccessChart"></canvas>
+      </div>
+
+    </main>
+  </div>
+   <script src="js/header-loader.js"></script>
+  <script src="js/securitydashboard.js"></script>
+</body>
+</html>

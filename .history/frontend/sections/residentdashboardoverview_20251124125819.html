@@ -1,0 +1,43 @@
+
+                <script src="https://cdn.tailwindcss.com"></script>
+
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
+                <style>
+                    /* Ensures the chart has a consistent height */
+                    #accessChart {
+                        max-width: 100%;
+                        height: 384px; 
+                    }
+                </style>
+            </head>
+
+            <body class="bg-gray-100 min-h-screen font-sans">
+
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">
+                        Resident Operations Overview
+                    </h2>
+                    
+                    <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-blue-500">
+                            <p class="text-gray-500 text-sm font-semibold">Current Payment Status</p>
+                            <h2 id="currentPaymentStatus" class="text-3xl font-extrabold text-blue-700 mt-1">0</h2>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-yellow-500">
+                            <p class="text-gray-500 text-sm font-semibold">Next Payment Due Date</p>
+                            <h2 id="nextPaymentDueDate" class="text-3xl font-extrabold text-yellow-600 mt-1">0</h2>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-green-500">
+                            <p class="text-gray-500 text-sm font-semibold">Access Priviledges</p>
+                            <h2 id="accessPrivileges" class="text-3xl font-extrabold text-green-600 mt-1">0%</h2>
+                        </div>
+                    </section>
+                    
+                
+
+                </div>
+
+                <script src="js/residentdashboardoverview.js"></script>

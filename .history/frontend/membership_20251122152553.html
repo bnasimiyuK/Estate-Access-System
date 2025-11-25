@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Request Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and improved form aesthetics */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8 min-h-screen flex items-center justify-center">
+
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg card">
+        <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Community Membership Request</h2>
+        
+        <!-- Real-time Count Placeholder -->
+        <div class="mb-6 p-4 bg-indigo-50 rounded-lg flex items-center justify-center space-x-4">
+            <span class="text-lg font-semibold text-indigo-700">Membership Count:</span>
+            <span id="membershipCount" class="text-2xl font-extrabold text-indigo-900">...</span>
+        </div>
+
+        <form id="membershipForm" class="space-y-4"> 
+
+            <!-- Full Name -->
+            <div>
+                <label for="ResidentName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" id="ResidentName" name="ResidentName"
+                    placeholder="Full Name"
+                    pattern="^[A-Za-z ]{2,}$"
+                    title="Full name should contain only letters"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required />
+            </div>
+
+            <!-- National ID -->
+            <div>
+                <label for="NationalID" class="block text-sm font-medium text-gray-700">National ID</label>
+                <input type="text" id="NationalID" name="NationalID"
+                    placeholder="8 digits"
+                    pattern="^[0-9]{8}$"
+                    title="National ID must be exactly 8 digits"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required />
+            </div>
+
+            <!-- Phone Number -->
+            <div>
+                <label for="PhoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input type="text" id="PhoneNumber" name="PhoneNumber"
+                    placeholder="+2547..."
+                    pattern="^(\+2547\d{8}|07\d{8})$"
+                    title="Phone number must be +2547XXXXXXXX or 07XXXXXXXX"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required />
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="Email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="Email" name="Email"
+                    placeholder="Email Address"
+                    title="Enter a valid email address"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required />
+            </div>
+
+            <!-- House Number -->
+            <div>
+                <label for="HouseNumber" class="block text-sm font-medium text-gray-700">House Number</label>
+                <input type="text" id="HouseNumber" name="HouseNumber"
+                    placeholder="House Number"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required />
+            </div>
+
+            <!-- Court Name -->
+            <div>
+                <label for="CourtName" class="block text-sm font-medium text-gray-700">Court Name</label>
+                <select id="CourtName" name="CourtName"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required>
+                    <option value="">Select Court</option>
+                    <option value="A Court">A Court</option>
+                    <option value="B Court">B Court</option>
+                    <option value="C Court">C Court</option>
+                    <option value="D Court">D Court</option>
+                </select>
+            </div>
+
+            <!-- Role Name -->
+            <div>
+                <label for="RoleName" class="block text-sm font-medium text-gray-700">Your Role</label>
+                <select id="RoleName" name="RoleName"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                    required>
+                    <option value="">Select Your Role</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Resident">Resident</option>
+                    <option value="Visitor">Visitor</option>
+                </select>
+            </div>
+
+            <!-- Notes/Reason -->
+            <div>
+                <label for="Action" class="block text-sm font-medium text-gray-700">Notes/Reason (Optional)</label>
+                <textarea id="Action" name="Action"
+                    rows="3"
+                    placeholder="e.g., Requesting membership for a new property owner."
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"></textarea>
+            </div>
+
+
+            <button type="submit"
+                class="w-full bg-indigo-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                Submit Request
+            </button>
+        </form>
+
+        <p id="feedbackMessage" class="mt-4 text-center p-3 rounded-lg"></p>
+
+    </div>
+    
+    <script type="module">
+        // =============================
+        // CONFIG
+        // =============================
+        // The API host remains the same as in your original file.
+        const API_HOST = "http://localhost:4050"; 
+
+        // DOM elements
+        const membershipForm = document.getElementById("membershipForm");
+        const feedbackMessage = document.getElementById("feedbackMessage");
+        const membershipCountSpan = document.getElementById("membershipCount");
+
+        // =============================
+        // UI HELPER FUNCTIONS 🎨
+        // =============================
+
+        /**
+         * Updates the UI with a styled message.
+         * @param {string} message - The text content to display.
+         * @param {boolean} isSuccess - True for success (green), false for error (red).
+         * @param {boolean} isPending - True for pending (blue).
+         */
+        function updateFeedback(message, isSuccess, isPending = false) {
+            if (feedbackMessage) {
+                feedbackMessage.innerHTML = message;
+                feedbackMessage.classList.remove("text-red-600", "text-green-600", "text-blue-600", "bg-red-100", "bg-green-100", "bg-blue-100");
+                
+                if (isPending) {
+                    feedbackMessage.classList.add("text-blue-600", "bg-blue-100");
+                } else if (isSuccess) {
+                    feedbackMessage.classList.add("text-green-600", "bg-green-100");
+                } else {
+                    feedbackMessage.classList.add("text-red-600", "bg-red-100");
+                }
+                feedbackMessage.classList.add("text-sm", "font-medium");
+            }
+        }
+
+        /** Manages the submit button state. */
+        function setButtonState(disabled) {
+            const submitButton = membershipForm?.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = disabled;
+                submitButton.textContent = disabled ? "Processing..." : "Submit Request";
+            }
+        }
+
+        // =============================
+        // FETCH & DISPLAY MEMBERSHIP COUNT
+        // =============================
+        async function fetchMembershipCount() {
+            if (!membershipCountSpan) return;
+
+            try {
+                const response = await fetch(`${API_HOST}/api/membership/count`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    membershipCountSpan.textContent = data.totalRequests != null ? data.totalRequests : '0';
+                } else {
+                    membershipCountSpan.textContent = "Error";
+                }
+                
+            } catch (error) {
+                console.error("[DEBUG] Count fetch error:", error);
+                membershipCountSpan.textContent = "N/A";
+            }
+        }
+
+        // Call on load
+        fetchMembershipCount();
+
+        // =============================
+        // SUBMIT MEMBERSHIP REQUEST
+        // =============================
+        if (membershipForm) {
+            membershipForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                console.log("[DEBUG] Form submit clicked");
+
+                if (!feedbackMessage) {
+                    console.error("[DEBUG] feedbackMessage element not found in the DOM.");
+                    return;
+                }
+                
+                // 1. Initial UI Setup
+                setButtonState(true);
+                updateFeedback("Submitting request to backend...", false, true); // Set pending message (blue)
+
+                // 2. Collect and process data
+                const formData = new FormData(membershipForm);
+                const data = Object.fromEntries(formData.entries());
+                // Set empty notes/action to null, as required by the MSSQL schema
+                if (data.Action === "") data.Action = null; 
+
+                // 3. Client-side Validation (RoleName)
+                if (!data.RoleName || data.RoleName === "") { 
+                    updateFeedback("❌ Submission Failed: Please select a valid Role.", false);
+                    setButtonState(false);
+                    return;
+                }
+
+                try {
+                    console.log(`[DEBUG] Sending POST to ${API_HOST}/api/membership/request`);
+                    
+                    // 4. Send Request
+                    const response = await fetch(`${API_HOST}/api/membership/request`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data)
+                    });
+
+                    console.log(`[DEBUG] Response received: Status ${response.status}`);
+                    let result = {};
+                    
+                    try {
+                        result = await response.json();
+                    } catch (err) {
+                        // If the server returns a non-JSON response (e.g., HTML error), handle it gracefully
+                        console.warn("[DEBUG] Failed to parse response JSON.", err);
+                        result = { message: "Server returned an unreadable response." };
+                    }
+
+                    if (response.ok) {
+                        // 5a. Success (HTTP 200-299)
+                        updateFeedback(`✅ Success! Request **RECEIVED** by backend. ID: ${result.requestId || "N/A"}`, true);
+                        membershipForm.reset();
+                        fetchMembershipCount();
+                    } else {
+                        // 5b. Server Error (HTTP 4xx/5xx - Backend received it, but rejected it)
+                        const errorMessage = result.message || `Server Error (${response.status}): Request rejected by the backend.`;
+                        updateFeedback(`❌ Submission Failed: ${errorMessage}`, false);
+                    }
+
+                } catch (err) {
+                    // 5c. Network Error (Request did not reach the backend)
+                    console.error("[DEBUG] Network/Fetch error:", err);
+                    updateFeedback(
+                        `🛑 **CONNECTION FAILURE** 🛑: Request did not reach ${API_HOST}. Check your local API is running.`, 
+                        false
+                    );
+                } finally {
+                    // 6. Final Cleanup
+                    setButtonState(false); // Always re-enable button
+                }
+            });
+        } else {
+            console.error("[DEBUG] membershipForm element not found in the DOM.");
+        }
+    </script>
+</body>
+</html>

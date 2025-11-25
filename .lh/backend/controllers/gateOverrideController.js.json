@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/controllers/gateOverrideController.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763952628797,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763952669612,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n // backend/controllers/gateOverrideController.js\n-import { dbPool } from \"../server.js\"; // your server.js must export dbPool\n+import { dbPool } from \"../server.js\"; // your MSSQL connection pool\n \n-// Named export: must match the import\n+// Fetch the last 1000 gate override logs\n export async function getGateOverrideLogs(req, res) {\n     try {\n         const result = await dbPool.request().query(`\n             SELECT TOP (1000) \n@@ -20,4 +20,31 @@\n         console.error(\"Error fetching gate override logs:\", err.message);\n         res.status(500).json({ message: \"Failed to retrieve gate override logs\", error: err.message });\n     }\n }\n+\n+// Perform a manual gate override (OPEN or CLOSE)\n+export async function performManualOverride(req, res) {\n+    const { gateId, action, reason, userId } = req.body;\n+\n+    if (!gateId || !action || !userId) {\n+        return res.status(400).json({ message: \"gateId, action, and userId are required\" });\n+    }\n+\n+    try {\n+        await dbPool.request()\n+            .input(\"gateId\", gateId)\n+            .input(\"action\", action)\n+            .input(\"reason\", reason || '')\n+            .input(\"userId\", userId)\n+            .query(`\n+                INSERT INTO [EstateAccessManagementSystem].[dbo].[gate_overrides] \n+                (gateId, action, reason, userId, createdAt)\n+                VALUES (@gateId, @action, @reason, @userId, GETDATE())\n+            `);\n+\n+        res.status(200).json({ message: `Gate ${gateId} manually ${action}ed successfully.` });\n+    } catch (err) {\n+        console.error(\"Error performing manual override:\", err.message);\n+        res.status(500).json({ message: \"Failed to perform manual override\", error: err.message });\n+    }\n+}\n"
+                }
+            ],
+            "date": 1763952628797,
+            "name": "Commit-0",
+            "content": "// backend/controllers/gateOverrideController.js\nimport { dbPool } from \"../server.js\"; // your server.js must export dbPool\n\n// Named export: must match the import\nexport async function getGateOverrideLogs(req, res) {\n    try {\n        const result = await dbPool.request().query(`\n            SELECT TOP (1000) \n                [id],\n                [gateId],\n                [action],\n                [reason],\n                [userId],\n                [createdAt]\n            FROM [EstateAccessManagementSystem].[dbo].[gate_overrides]\n            ORDER BY createdAt DESC\n        `);\n        res.status(200).json(result.recordset);\n    } catch (err) {\n        console.error(\"Error fetching gate override logs:\", err.message);\n        res.status(500).json({ message: \"Failed to retrieve gate override logs\", error: err.message });\n    }\n}\n"
+        }
+    ]
+}

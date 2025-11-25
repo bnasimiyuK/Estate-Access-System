@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/routes/gae_overridesRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763950073944,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763950073944,
+            "name": "Commit-0",
+            "content": "// Example: routes/logsRoutes.js\n\nconst express = require('express');\nconst router = express.Router();\n\n// Import the authentication and authorization middleware. \n// We use 'authenticateJWT' for token validation and 'isAdmin' for the \n// critical role check (Admin Level 1) required for logs access.\nconst { authenticateJWT, isAdmin } = require('../middleware/auth'); \nconst logsController = require('../controllers/logsController'); \n\n/**\n * Route: GET /api/logs/gate_overrides\n * Access: Requires both JWT authentication AND Admin (Level 1) role check.\n */\nrouter.get('/gate_overrides', authenticateJWT, isAdmin, logsController.getGateOverrideLogs);\n\nmodule.exports = router;"
+        }
+    ]
+}

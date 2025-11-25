@@ -25,7 +25,7 @@ export async function handleAccessAttempt(req, res) {
 }
 
 // Fetch access logs using AccessLog model
-export async function getAccessLogs(req, res) {
+export async function getaccesslogs(req, res) {
   try {
     // If using model
     if (AccessLog.getAllLogs) {

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Logs</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+
+<h1>Access Logs</h1>
+<table id="logsTable">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Timestamp</th>
+      <th>User</th>
+      <th>Action</th>
+      <th>Resource</th>
+      <th>IP</th>
+      <th>User Agent</th>
+      <th>Referrer</th>
+      <th>Metadata</th>
+      <th>Log Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Logs will appear here -->
+  </tbody>
+</table>
+
+<script type="module" src="js/accesslogs.js"></script>
+</body>
+</html>

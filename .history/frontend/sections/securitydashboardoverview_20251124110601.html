@@ -1,0 +1,81 @@
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Dashboard Overview</title>
+
+                <script src="https://cdn.tailwindcss.com"></script>
+
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
+                <style>
+                    /* Ensures the chart has a consistent height */
+                    #accessChart {
+                        max-width: 100%;
+                        height: 384px; 
+                    }
+                </style>
+            </head>
+
+            <body class="bg-gray-100 min-h-screen font-sans">
+
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">
+                        Administrative & Operations Overview
+                    </h2>
+                    
+                    <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-blue-500">
+                            <p class="text-gray-500 text-sm font-semibold">Access Logs
+                            <h2 id="totalResidents" class="text-3xl font-extrabold text-blue-700 mt-1">0</h2>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-yellow-500">
+                            <p class="text-gray-500 text-sm font-semibold">Manual Gate Overrides</p>
+                            <h2 id="pendingPayments" class="text-3xl font-extrabold text-yellow-600 mt-1">0</h2>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-green-500">
+                            <p class="text-gray-500 text-sm font-semibold">Visitor Management</p>
+                            <h2 id="compliancePct" class="text-3xl font-extrabold text-green-600 mt-1">0%</h2>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-red-500">
+                            <p class="text-gray-500 text-sm font-semibold">Gate Overrides Today</p>
+                            <h2 id="overrideCount" class="text-3xl font-extrabold text-red-600 mt-1">0</h2>
+                        </div>
+                    </section>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-4 border-b pb-3">
+                        Today's Visitor Flow Metrics
+                    </h3>
+                    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-teal-500">
+                            <p class="text-gray-500 text-sm font-semibold">Visitors Checked In</p>
+                            <h2 id="totalVisitorsCheckedin" class="text-3xl font-extrabold text-teal-700 mt-1">0</h2> 
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-cyan-500">
+                            <p class="text-gray-500 text-sm font-semibold">Visitors Checked Out</p>
+                            <h2 id="totalVisitorsCheckedout" class="text-3xl font-extrabold text-cyan-700 mt-1">0</h2>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-orange-500">
+                            <p class="text-gray-500 text-sm font-semibold">Access Rejects</p>
+                            <h2 id="rejects" class="text-3xl font-extrabold text-orange-600 mt-1">0</h2>
+                        </div>
+                    </section>
+
+
+                    <section class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Access Attempts Last 14 Days</h3>
+                        <div class="w-full">
+                            <canvas id="accessChart" class="w-full h-96"></canvas>
+                        </div>
+                    </section>
+                </div>
+
+                <script src="js/dashboardoverview.js"></script>
+
+            </body>
+            </html>

@@ -1,0 +1,42 @@
+<!-- Access Logs Section -->
+<div id="accessLogs" class="tabContent p-4">
+  <h2 class="text-xl font-bold mb-4">Access Logs</h2>
+
+  <div class="mb-4 flex space-x-2">
+    <button id="exportCsvBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+      Export CSV 📄
+    </button>
+    <button id="exportExcelBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+      Export Excel 📊
+    </button>
+  </div>
+
+  <table id="accessLogsTable" class="min-w-full bg-white border rounded-lg overflow-hidden shadow-xl">
+    <thead>
+      <tr class="bg-gray-700 text-white">
+        <th class="p-3 border-r border-gray-600">Timestamp</th>
+        <th class="p-3 border-r border-gray-600">User/Visitor ID</th>
+        <th class="p-3 border-r border-gray-600">Action</th>
+        <th class="p-3">Log Type</th>
+      </tr>
+      <tr class="bg-gray-100 border-b border-gray-300">
+        <th class="p-1 border-r border-gray-300">
+          <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter Timestamp..." />
+        </th>
+        <th class="p-1 border-r border-gray-300">
+          <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter ID..." />
+        </th>
+        <th class="p-1 border-r border-gray-300">
+          <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter Action..." />
+        </th>
+        <th class="p-1">
+          <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter Type..." />
+        </th>
+      </tr>
+    </thead>
+    <tbody id="logsTableBody">
+      <!-- Data will be rendered here by JavaScript -->
+    </tbody>
+  </table>
+</div>
+<script src="/js/accesslogs.js"></script>

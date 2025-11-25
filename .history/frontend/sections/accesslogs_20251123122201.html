@@ -1,0 +1,25 @@
+<!-- sections/accesslogs.html -->
+<div id="accessLogs" class="p-4">
+  <h2 class="text-xl font-bold mb-4">Access Logs</h2>
+
+  <table id="accessLogsTable" class="min-w-full bg-white border rounded-lg shadow">
+    <thead>
+      <tr class="bg-gray-700 text-white">
+        <th class="p-3 border-r border-gray-600">Timestamp</th>
+        <th class="p-3 border-r border-gray-600">User/Visitor ID</th>
+        <th class="p-3 border-r border-gray-600">Action</th>
+        <th class="p-3">Log Type</th>
+      </tr>
+    </thead>
+    <tbody id="logsTableBody">
+      <!-- Data will be filled by JS -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Populate table when fragment loads
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof loadaccesslogs === 'function') loadaccesslogs();
+  });
+</script>

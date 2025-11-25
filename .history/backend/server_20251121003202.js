@@ -154,8 +154,8 @@ app.get("/api/dashboard/summary", verifyToken, async (req, res) => {
     }
 });
 
-// 2. GET http://localhost:3000/api/memberships/records (404 FIX)
-app.get("/api/memberships/records", verifyToken, getApprovedResidents); 
+// 2. GET http://localhost:3000/api/membership/records (404 FIX)
+app.get("/api/membership/records", verifyToken, getApprovedResidents); 
 // Assumption: getApprovedResidents returns the list of approved members (the "records")
 // If getApprovedResidents only returns the approved list, this handles the route.
 
@@ -180,12 +180,12 @@ app.get("/api/access/chart", verifyToken, async (req, res) => {
     }
 });
 
-// 4. GET http://localhost:3000/api/memberships/requests (404 FIX)
-app.get("/api/memberships/requests", verifyToken, getMembershipRequests);
+// 4. GET http://localhost:3000/api/membership/requests (404 FIX)
+app.get("/api/membership/requests", verifyToken, getMembershipRequests);
 // Assumption: getMembershipRequests returns ALL requests, including pending ones (the "requests").
 
 // CRITICAL ADMIN ROUTE EXAMPLE (Already defined in your original code but kept for context)
-app.get('/api/admin/memberships', verifyToken, getMembershipRequests); 
+app.get('/api/admin/membership', verifyToken, getMembershipRequests); 
 
 
 // =====================================

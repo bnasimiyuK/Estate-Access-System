@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Athi Estate | Payments</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+ </style>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col h-screen">
+
+<header class="bg-white shadow-md p-4 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto flex justify-center items-center">
+        <h1 class="text-xl font-bold text-indigo-700">Athi Estate Payments</h1>                    
+    </div>
+</header>
+
+<main class="flex-1 overflow-y-auto p-4 max-w-7xl mx-auto w-full space-y-4">
+
+  <!-- MPESA PAYMENT FORM -->
+  <section class="bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
+    <h2 class="text-indigo-700 font-bold mb-4 text-lg">💳 Initiate MPESA Payment</h2>
+    <div class="flex flex-col space-y-3 max-w-sm">
+        <select id="residentIdSelect" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition">
+            <option value="" disabled selected>Select Resident</option>
+        </select>
+        <input type="text" id="serviceNameInput" placeholder="Service Name" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+        <input type="number" id="paymentAmountInput" placeholder="Amount (Ksh)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+        <input type="text" id="phoneNumberInput" placeholder="Phone (2547XXXXXXXX)" class="border p-3 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition"/>
+        <button id="payBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01]">
+            <span id="payBtnText">Initiate Payment</span>
+        </button>
+        <div id="paymentResult" class="text-xs mt-2 p-2 rounded-lg text-center hidden"></div>
+    </div>
+  </section>
+
+  <!-- PAYMENT HISTORY -->
+  <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col border border-indigo-100">
+    <h3 class="text-indigo-700 font-semibold mb-3 text-lg">📋 Payment History</h3>
+    <div class="overflow-x-auto max-h-[300px] border border-gray-200 rounded-lg">
+        <table id="paymentsTable" class="min-w-full text-xs">
+            <thead class="bg-indigo-100 text-indigo-800 sticky top-0 shadow-sm">
+                <tr>
+                    <th>PaymentID</th>
+                    <th>ResidentID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Reference</th>
+                    <th>PaymentMethod</th>
+                    <th>Phone</th>
+                    <th>VerifiedDate</th>
+                </tr>
+            </thead>
+            <tbody id="paymentsBody" class="divide-y divide-gray-100"></tbody>
+        </table>
+    </div>
+  </section>
+
+  <!-- VERIFIED PAYMENTS -->
+  <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col border border-green-100">
+    <h3 class="text-green-700 font-semibold mb-3 text-lg">✅ Verified Transactions</h3>
+    <div class="overflow-x-auto max-h-[250px] border border-gray-200 rounded-lg">
+        <table id="verifiedTable" class="min-w-full text-xs">
+            <thead class="bg-green-100 text-green-800 sticky top-0 shadow-sm">
+                <tr>
+                    <th>ResidentID</th>
+                    <th>Amount</th>
+                    <th>Reference</th>
+                    <th>Verified Date</th>
+                </tr>
+            </thead>
+            <tbody id="verifiedBody" class="divide-y divide-gray-100"></tbody>
+        </table>
+    </div>
+  </section>
+
+  <!-- BALANCES -->
+  <section class="bg-white rounded-xl shadow-lg p-4 flex flex-col border border-yellow-100">
+    <h3 class="text-yellow-700 font-semibold mb-3 text-lg">💰 Resident Balances Summary</h3>
+    <div class="overflow-x-auto max-h-[250px] border border-gray-200 rounded-lg">
+        <table id="balanceTable" class="min-w-full text-xs">
+            <thead class="bg-yellow-100 text-yellow-800 sticky top-0 shadow-sm">
+                <tr>
+                    <th>ResidentID</th>
+                    <th>Total Paid</th>
+                    <th>Total Due</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody id="balanceBody" class="divide-y divide-gray-100"></tbody>
+        </table>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="js/payment.js"></script>
+</body>
+</html>

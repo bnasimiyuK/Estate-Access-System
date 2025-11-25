@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/controllers/gate_overridesController.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1763949897277,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763951183818,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,40 +1,26 @@\n-// Example: controllers/logsController.js\n+// controllers/gateOverridesController.js\n+import sql from \"mssql\";\n+import { dbPool } from \"../server.js\";\n \n-// Assume this imports your MSSQL connection and query helper function\n-const db = require('../db'); \n-\n-// The specific SQL query required by the frontend data structure\n-const GET_OVERRIDE_LOGS_QUERY = `\n-    SELECT TOP (1000) \n-        [id], \n-        [gateId], \n-        [action], \n-        [reason], \n-        [userId], \n-        [createdAt] \n-    FROM \n-        [EstateAccessManagementSystem].[dbo].[gate_overrides]\n-`;\n-\n-/**\n- * Controller function to fetch the top 1000 gate override logs.\n- * This endpoint is protected and requires Admin (Level 1) privileges.\n- */\n-exports.getGateOverrideLogs = async (req, res) => {\n+export async function getGateOverrides(req, res) {\n     try {\n-        // Execute the SQL query. 'db.query' is assumed to be a wrapper \n-        // that handles the connection pool and returns the MSSQL recordset.\n-        const result = await db.query(GET_OVERRIDE_LOGS_QUERY);\n-        \n-        // Return the data as a clean JSON array of objects (the recordset)\n-        return res.status(200).json(result.recordset); \n+        const result = await dbPool\n+            .request()\n+            .query(`\n+                SELECT \n+                    id,\n+                    gateId,\n\\ No newline at end of file\n+                    action,\n+                    reason,\n+                    userId,\n+                    createdAt\n+                FROM GateOverrides\n+                ORDER BY createdAt DESC\n+            `);\n \n+        return res.status(200).json(result.recordset);\n     } catch (error) {\n-        console.error('Database error fetching gate override logs:', error.message);\n-        // Respond with a 500 status on any server or database failure\n-        return res.status(500).json({ \n-            message: 'Failed to retrieve gate override logs from database.',\n-            error: error.message\n-        });\n+        console.error(\"Error fetching gate overrides:\", error);\n+        return res.status(500).json({ message: \"Server error fetching gate overrides\" });\n     }\n-};\n+}\n"
+                }
+            ],
+            "date": 1763949897277,
+            "name": "Commit-0",
+            "content": "// Example: controllers/logsController.js\n\n// Assume this imports your MSSQL connection and query helper function\nconst db = require('../db'); \n\n// The specific SQL query required by the frontend data structure\nconst GET_OVERRIDE_LOGS_QUERY = `\n    SELECT TOP (1000) \n        [id], \n        [gateId], \n        [action], \n        [reason], \n        [userId], \n        [createdAt] \n    FROM \n        [EstateAccessManagementSystem].[dbo].[gate_overrides]\n`;\n\n/**\n * Controller function to fetch the top 1000 gate override logs.\n * This endpoint is protected and requires Admin (Level 1) privileges.\n */\nexports.getGateOverrideLogs = async (req, res) => {\n    try {\n        // Execute the SQL query. 'db.query' is assumed to be a wrapper \n        // that handles the connection pool and returns the MSSQL recordset.\n        const result = await db.query(GET_OVERRIDE_LOGS_QUERY);\n        \n        // Return the data as a clean JSON array of objects (the recordset)\n        return res.status(200).json(result.recordset); \n\n    } catch (error) {\n        console.error('Database error fetching gate override logs:', error.message);\n        // Respond with a 500 status on any server or database failure\n        return res.status(500).json({ \n            message: 'Failed to retrieve gate override logs from database.',\n            error: error.message\n        });\n    }\n};"
+        }
+    ]
+}

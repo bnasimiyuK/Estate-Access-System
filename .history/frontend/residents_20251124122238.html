@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resident Dashboard | Estate Access System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #4b5563; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="flex min-h-screen bg-gray-100 font-sans">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 text-white min-h-screen p-4 shadow-xl overflow-y-auto custom-scrollbar">
+    <nav class="flex flex-col space-y-2">
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-blue-600 font-semibold shadow-inner" data-target="sections/resident-overview.html">Dashboard Overview</button>
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold" data-target="sections/payments.html">Payments / MPESA</button>
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold" data-target="sections/membership-requests.html">Membership Requests</button>
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold" data-target="sections/approved-residents.html">Approved Residents</button>
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold" data-target="sections/visitor-passes.html">Visitor Passes</button>
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold" data-target="sections/access-logs.html">Access Logs</button>
+      <button class="sidebarBtn w-full p-3 text-left rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold" data-target="sections/notifications.html">Notifications</button>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-10 rounded-lg mb-6">
+      <h1 class="text-2xl font-bold">Resident Dashboard</h1>
+      <button id="logoutBtn" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 font-semibold text-sm shadow-md">Logout</button>
+    </header>
+
+    <div id="main-content-area">
+      <!-- Dashboard Overview Cards -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8" id="dashboardCards">
+        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-blue-500">
+          <p class="text-gray-500 text-sm font-semibold">Payment Status</p>
+          <h2 id="paymentStatusCard" class="text-3xl font-extrabold text-blue-700 mt-1">Loading...</h2>
+        </div>
+        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-green-500">
+          <p class="text-gray-500 text-sm font-semibold">Active Visitor Passes</p>
+          <h2 id="activeVisitorPasses" class="text-3xl font-extrabold text-green-600 mt-1">0</h2>
+        </div>
+        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-yellow-500">
+          <p class="text-gray-500 text-sm font-semibold">Last Access Attempts</p>
+          <h2 id="lastAccessAttempts" class="text-3xl font-extrabold text-yellow-600 mt-1">0</h2>
+        </div>
+        <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-red-500">
+          <p class="text-gray-500 text-sm font-semibold">Notifications</p>
+          <h2 id="residentAlerts" class="text-3xl font-extrabold text-red-600 mt-1">0</h2>
+        </div>
+      </section>
+
+      <!-- Dynamic Section Content -->
+      <div id="dynamic-section-content" class="mt-6 p-4 bg-white rounded-xl shadow-lg">
+        <p class="text-gray-600 italic text-center">Select a navigation item to view the relevant section.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- JS Module -->
+<script type="module" src="js/residents.js"></script>
+
+</body>
+</html>

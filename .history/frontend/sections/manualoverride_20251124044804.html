@@ -1,0 +1,69 @@
+<!-- Load Tailwind CSS for styling (MUST be included for this fragment to style itself when dynamically loaded) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    /* Custom styles for better readability and a clean look */
+    .container-shadow {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .table-row-hover:hover {
+        background-color: #f3f4f6;
+    }
+</style>
+
+<!-- Main content fragment, carrying the original body classes -->
+<div class="bg-gray-50 p-6 min-h-screen">
+
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-2">
+            Gate Override & Manual Access Logs
+        </h1>
+
+        <!-- Filters and Controls -->
+        <div class="bg-white p-6 rounded-xl container-shadow mb-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
+            <div class="flex-grow w-full md:w-auto">
+                <label for="filtergateId" class="block text-sm font-medium text-gray-700">Filter by Gate ID</label>
+                <input type="text" id="filtergateId" placeholder="Gate 1, Gate 2..."
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <div class="flex-grow w-full md:w-auto">
+                <label for="filteraction" class="block text-sm font-medium text-gray-700">Filter by action</label>
+                <input type="text" id="filteraction" placeholder="OPEN, CLOSE, Override..."
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <button id="exportLogsBtn"
+                    class="w-full md:w-auto mt-6 md:mt-1 flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Export CSV
+            </button>
+        </div>
+
+        <!-- Logs Table -->
+        <div class="bg-white rounded-xl container-shadow overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gate ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">action</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason/Context</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID (Admin/Security)</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- Logs data will be inserted here by JavaScript -->
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Loading gate override logs...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Notification Message Area -->
+        <div id="statusMessage" class="mt-4 p-3 bg-red-100 text-red-700 rounded-lg hidden" role="alert"></div>
+
+    </div>
+
+    <!-- Link to the external JavaScript file -->
+    <script type="module" src="js/manualoverride.js"></script>
+</div>

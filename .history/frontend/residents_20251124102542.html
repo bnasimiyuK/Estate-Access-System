@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Residents Dashboard</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- DataTables CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+</head>
+<body class="bg-gray-50 p-6">
+
+  <div class="max-w-full mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Residents Dashboard</h1>
+
+    <!-- Sync Button for Admin -->
+    <div class="mb-4">
+      <button id="syncResidentsBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Sync Residents
+      </button>
+    </div>
+
+    <!-- Residents Table -->
+    <div class="overflow-x-auto">
+      <table id="residentsTable" class="display stripe hover w-full">
+        <thead>
+          <tr>
+            <th>Resident ID</th>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>National ID</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>House</th>
+            <th>Court</th>
+            <th>Occupation</th>
+            <th>Date Joined</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Total Due</th>
+          </tr>
+          <tr>
+            <!-- Filter inputs -->
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Search ID"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="User ID"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Name"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="National ID"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Phone"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Email"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="House"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Court"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Occupation"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Date Joined"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Status"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Role"></th>
+            <th><input type="text" class="column-filter w-full text-xs border rounded px-1" placeholder="Total Due"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filled dynamically by residents.js -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Residents JS -->
+  <script type="module" src="./residents.js"></script>
+</body>
+</html>

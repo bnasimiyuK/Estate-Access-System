@@ -1,0 +1,107 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Dashboard | Level 2</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* Ensure the body-like container takes up the full screen space */
+    .dashboard-container {
+        min-height: 100vh;
+        background-color: #f3f4f6; /* bg-gray-100 */
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Header -->
+    <header class="bg-green-600 text-white p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Security Dashboard (Level 2)</h1>
+        <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600">Logout</button>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white min-h-screen p-4">
+            <nav class="flex flex-col space-y-2">
+                <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="accessLogs">Access Logs</button>
+                <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="visitorApprovals">Visitor Approvals</button>
+                <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="manualGate">Manual Gate Control</button>
+                <button class="tabBtn p-2 rounded hover:bg-gray-700" data-tab="reportsAnalysis">Reports & Analysis</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            
+            <!-- Access Logs (UPDATED with Export Buttons and Filter Inputs) -->
+            <div id="accessLogs" class="tabContent hidden p-4">
+                <h2 class="text-xl font-bold mb-4">Access Logs</h2>
+
+                <div class="mb-4 flex space-x-2">
+                    <button id="exportCsvBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out shadow-lg">
+                        Export CSV 📄
+                    </button>
+                    <button id="exportExcelBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out shadow-lg">
+                        Export Excel 📊
+                    </button>
+                </div>
+
+                <table id="accessLogsTable" class="min-w-full bg-white border rounded-lg overflow-hidden shadow-xl">
+                    <thead>
+                        <tr id="logsTableHeader" class="bg-gray-700 text-white">
+                            <th class="p-3 border-r border-gray-600">Timestamp</th>
+                            <th class="p-3 border-r border-gray-600">User/Visitor ID</th>
+                            <th class="p-3 border-r border-gray-600">Action</th>
+                            <th class="p-3">Log Type</th>
+                        </tr>
+                        <!-- Filter Row -->
+                        <tr class="bg-gray-100 border-b border-gray-300">
+                            <th class="p-1 border-r border-gray-300">
+                                <input type="text" class="filterInput w-full p-1 text-sm border rounded focus:ring-green-500 focus:border-green-500" placeholder="Filter Timestamp..." />
+                            </th>
+                            <th class="p-1 border-r border-gray-300">
+                                <input type="text" class="filterInput w-full p-1 text-sm border rounded focus:ring-green-500 focus:border-green-500" placeholder="Filter ID..." />
+                            </th>
+                            <th class="p-1 border-r border-gray-300">
+                                <input type="text" class="filterInput w-full p-1 text-sm border rounded focus:ring-green-500 focus:border-green-500" placeholder="Filter Action..." />
+                            </th>
+                            <th class="p-1">
+                                <input type="text" class="filterInput w-full p-1 text-sm border rounded focus:ring-green-500 focus:border-green-500" placeholder="Filter Type..." />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Data will be rendered here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Visitor Approvals -->
+            <div id="visitorApprovals" class="tabContent hidden">
+                <h2 class="text-2xl font-bold mb-4">Visitor Approvals</h2>
+                <div id="visitorRequestList" class="space-y-2"></div>
+            </div>
+
+            <!-- Manual Gate Control -->
+            <div id="manualGate" class="tabContent hidden">
+                <h2 class="text-2xl font-bold mb-4">Manual Gate Control</h2>
+                <input type="text" id="gateResidentId" placeholder="Resident ID" class="border p-2 rounded mb-2 w-full max-w-sm">
+                <input type="text" id="gateVisitorId" placeholder="Visitor ID (optional)" class="border p-2 rounded mb-2 w-full max-w-sm">
+                <button id="openGateBtn" class="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700">Open Gate</button>
+                <div id="gateStatus" class="mt-4"></div>
+            </div>
+
+            <!-- Reports & Analysis -->
+            <div id="reportsAnalysis" class="tabContent hidden">
+                <h2 class="text-2xl font-bold mb-4">Reports & Analysis</h2>
+                <canvas id="dailyAccessChart" class="mb-6"></canvas>
+                <canvas id="monthlyAccessChart"></canvas>
+            </div>
+
+        </main>
+    </div>
+</div>
+<!-- The javascript files need to be available in the environment to work -->
+<script src="js/header-loader.js"></script>
+<script src="js/securitydashboard.js"></script>

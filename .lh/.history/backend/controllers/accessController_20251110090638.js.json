@@ -1,0 +1,18 @@
+{
+    "sourceFile": ".history/backend/controllers/accessController_20251110090638.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763865200740,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763865200740,
+            "name": "Commit-0",
+            "content": "// backend/controllers/accessController.js\nimport sql from \"mssql\";\nimport dbConfig from \"../config/dbConfig.js\";\nconst AccessLog = require('../models/AccessLog');\nconst Payment = require('../models/Payment');\n\n// Handle access attempt\nexport async function handleAccessAttempt(req, res) {\n  try {\n    const { ResidentID, UserType, Action } = req.body;\n    if (!UserType || !Action) return res.status(400).json({ message: 'Missing fields' });\n\n    let result = 'Denied';\n    if (UserType === 'resident' && ResidentID) {\n      const latest = await Payment.verifyPayment(ResidentID);\n      if (latest && latest.Status === 'Paid') result = 'Granted';\n    }\n\n    await AccessLog.logAccessAttempt({ UserType, UserID: ResidentID || null, Action, Result: result });\n    res.json({ success: true, result });\n  } catch (err) {\n    console.error(\"Error handling access attempt:\", err);\n    res.status(500).json({ message: 'Access error' });\n  }\n}\n\n// Fetch access logs using AccessLog model\nexport async function getaccesslogs(req, res) {\n  try {\n    // If using model\n    if (AccessLog.getAllLogs) {\n      const logs = await AccessLog.getAllLogs();\n      return res.json(logs);\n    }\n\n    // Fallback: fetch directly from database using mssql\n    const pool = await sql.connect(dbConfig);\n    const result = await pool.request().query(`\n      SELECT AccessID, UserName, Action, Date\n      FROM AccessLogs\n      ORDER BY Date DESC\n    `);\n    res.json(result.recordset);\n  } catch (error) {\n    console.error(\"Error fetching access logs:\", error);\n    res.status(500).json({ message: \"Server error\" });\n  }\n}\n"
+        }
+    ]
+}

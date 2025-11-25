@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/config/db.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763866976282,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763866976282,
+            "name": "Commit-0",
+            "content": "import dotenv from \"dotenv\";\r\nimport sql from \"mssql\";\r\n\r\ndotenv.config();\r\n\r\nconst dbConfig = {\r\n  user: process.env.DB_USER || \"Beverly\",\r\n  password: process.env.DB_PASSWORD || \"Bev@1234567\",\r\n  database: process.env.DB_NAME || \"EstateAccessManagementSystem\",\r\n  server: process.env.DB_SERVER || \"localhost\",\r\n  pool: {\r\n    max: 10,\r\n    min: 0,\r\n    idleTimeoutMillis: 30000,\r\n  },\r\n  options: {\r\n    encrypt: false,\r\n    trustServerCertificate: true,\r\n  },\r\n};\r\n\r\n// ✅ Function to connect to the database\r\nexport async function connectDB() {\r\n  try {\r\n    const pool = await sql.connect(dbConfig);\r\n    console.log(\"✅ Connected to SQL Server\");\r\n    return pool;\r\n  } catch (err) {\r\n    console.error(\"❌ Database Connection Failed:\", err);\r\n    throw err; // important to throw so controllers catch errors\r\n  }\r\n}\r\n\r\n// default export if needed\r\nexport default dbConfig;\r\n"
+        }
+    ]
+}

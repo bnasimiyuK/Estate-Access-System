@@ -1,0 +1,30 @@
+{
+    "sourceFile": "backend/routes/courtsRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1763983754828,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1763983801860,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,5 +19,30 @@\n         res.status(500).json({ error: 'Failed to fetch courts' });\n     }\n });\n \n+// courts.js\n+export async function loadCourts(dropdownSelector, token) {\n+    try {\n+        const res = await axios.get('/api/courts', {\n+            headers: {\n+                Authorization: `Bearer ${token}` // if required\n+            }\n+        });\n+        const courts = res.data;\n+\n+        const dropdown = document.querySelector(dropdownSelector);\n+        if (!dropdown) return;\n+\n+        dropdown.innerHTML = ''; // clear existing options\n+        courts.forEach(court => {\n+            const option = document.createElement('option');\n+            option.value = court.CourtName;\n+            option.textContent = court.CourtName;\n+            dropdown.appendChild(option);\n+        });\n+    } catch (err) {\n+        console.error('Failed to load courts:', err);\n+    }\n+}\n+\n export default router;\n"
+                },
+                {
+                    "date": 1763987112643,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,48 +1,11 @@\n // routes/courts.js\n-import express from 'express';\n-import sql from 'mssql';\n-const router = express.Router();\n+import { Router } from \"express\";\n+import { authenticateJWT } from \"../middleware/authMiddleware.js\";\n+import { getCourtList } from \"../server.js\";\n \n-router.get('/courts', async (req, res) => {\n-    try {\n-        const pool = await sql.connect(/* your config */);\n-        const result = await pool.request()\n-            .query(`\n-                SELECT CourtName\n-                FROM [dbo].[Courts]\n-                WHERE CourtName IS NOT NULL AND CourtName <> ''\n-                ORDER BY CourtName\n-            `);\n-        res.json(result.recordset);\n-    } catch (err) {\n-        console.error(err);\n-        res.status(500).json({ error: 'Failed to fetch courts' });\n-    }\n-});\n+const router = Router();\n \n-// courts.js\n-export async function loadCourts(dropdownSelector, token) {\n-    try {\n-        const res = await axios.get('/api/courts', {\n-            headers: {\n-                Authorization: `Bearer ${token}` // if required\n-            }\n-        });\n-        const courts = res.data;\n+// Use ONLY ONE route → clean + correct\n+router.get(\"/courts\", authenticateJWT, getCourtList);\n \n-        const dropdown = document.querySelector(dropdownSelector);\n-        if (!dropdown) return;\n-\n-        dropdown.innerHTML = ''; // clear existing options\n-        courts.forEach(court => {\n-            const option = document.createElement('option');\n-            option.value = court.CourtName;\n-            option.textContent = court.CourtName;\n-            dropdown.appendChild(option);\n-        });\n-    } catch (err) {\n-        console.error('Failed to load courts:', err);\n-    }\n-}\n-\n export default router;\n"
+                },
+                {
+                    "date": 1763987673453,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,7 +5,7 @@\n \n const router = Router();\n \n // Use ONLY ONE route → clean + correct\n-router.get(\"/courts\", authenticateJWT, getCourtList);\n+router.get(\"/courts/all\", authenticateJWT, getCourtList);\n \n export default router;\n"
+                }
+            ],
+            "date": 1763983754828,
+            "name": "Commit-0",
+            "content": "// routes/courts.js\nimport express from 'express';\nimport sql from 'mssql';\nconst router = express.Router();\n\nrouter.get('/courts', async (req, res) => {\n    try {\n        const pool = await sql.connect(/* your config */);\n        const result = await pool.request()\n            .query(`\n                SELECT CourtName\n                FROM [dbo].[Courts]\n                WHERE CourtName IS NOT NULL AND CourtName <> ''\n                ORDER BY CourtName\n            `);\n        res.json(result.recordset);\n    } catch (err) {\n        console.error(err);\n        res.status(500).json({ error: 'Failed to fetch courts' });\n    }\n});\n\nexport default router;\n"
+        }
+    ]
+}

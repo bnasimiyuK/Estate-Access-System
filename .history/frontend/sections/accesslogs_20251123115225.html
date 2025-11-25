@@ -1,0 +1,21 @@
+<h2 class="text-xl font-bold mb-4">Access Logs</h2>
+<div class="mb-4 flex space-x-2">
+    <button id="exportCsvBtn" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700">Export CSV</button>
+    <button id="exportExcelBtn" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700">Export Excel</button>
+</div>
+<table id="accessLogsTable" class="table-auto w-full border-collapse border border-gray-300">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Resident Name</th>
+            <th>House Number</th>
+            <th>Access Type</th>
+            <th>Timestamp</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="accessLogsTableBody">
+        <tr><td colspan="6">Loading...</td></tr>
+    </tbody>
+</table>
+<script type="module" src="js/accesslogs"></script>

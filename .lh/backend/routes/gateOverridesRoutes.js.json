@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/routes/gateOverridesRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1763847075812,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1763847075812,
+            "name": "Commit-0",
+            "content": "// backend/routes/gateOverridesRoutes.js\r\nimport { Router } from \"express\";\r\nimport { dbPool } from \"../server.js\";\r\nimport sql from \"mssql\";\r\nimport { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\r\n\r\nconst router = Router();\r\n\r\n// GET /api/gate-overrides?from=YYYY-MM-DD&to=YYYY-MM-DD\r\nrouter.get(\"/\", authenticateJWT, isAdmin, async (req, res) => {\r\n    try {\r\n        const { from, to } = req.query;\r\n\r\n        let query = `\r\n            SELECT TOP (1000)\r\n                [id],\r\n                [gateId],\r\n                [action],\r\n                [reason],\r\n                [userId],\r\n                [createdAt]\r\n            FROM [EstateAccessManagementSystem].[dbo].[gate_overrides]\r\n        `;\r\n\r\n        if (from && to) {\r\n            query += \" WHERE CAST(createdAt AS DATE) BETWEEN @from AND @to\";\r\n        }\r\n\r\n        query += \" ORDER BY createdAt DESC\";\r\n\r\n        const request = dbPool.request();\r\n        if (from && to) {\r\n            request.input(\"from\", sql.Date, from);\r\n            request.input(\"to\", sql.Date, to);\r\n        }\r\n\r\n        const result = await request.query(query);\r\n        res.json(result.recordset);\r\n\r\n    } catch (err) {\r\n        console.error(\"Gate overrides fetch error:\", err);\r\n        res.status(500).json({ message: \"Failed to fetch gate overrides\", details: err.message });\r\n    }\r\n});\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

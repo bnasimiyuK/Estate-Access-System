@@ -1,0 +1,103 @@
+<div class="flex">
+
+  <!-- ░░ SECURITY SUB-SIDEBAR (Inside Main Sidebar) ░░ -->
+  <aside class="w-64 bg-gray-800 text-white p-4 min-h-full rounded-lg shadow-lg">
+
+    <h2 class="text-lg font-bold mb-4 border-b pb-2">Security Dashboard</h2>
+
+    <nav class="flex flex-col space-y-2">
+      <button class="securityTabBtn p-2 rounded hover:bg-gray-700" data-tab="accessLogs">
+        Access Logs
+      </button>
+
+      <button class="securityTabBtn p-2 rounded hover:bg-gray-700" data-tab="visitorApprovals">
+        Visitor Approvals
+      </button>
+
+      <button class="securityTabBtn p-2 rounded hover:bg-gray-700" data-tab="manualGate">
+        Manual Gate Control
+      </button>
+
+      <button class="securityTabBtn p-2 rounded hover:bg-gray-700" data-tab="reportsAnalysis">
+        Reports & Analysis
+      </button>
+    </nav>
+  </aside>
+
+  <!-- MAIN SECURITY CONTENT AREA -->
+  <main class="flex-1 p-6">
+
+    <!-- Access Logs -->
+    <div id="accessLogs" class="securityTabContent hidden p-4">
+      <h2 class="text-xl font-bold mb-4">Access Logs</h2>
+
+      <div class="mb-4 flex space-x-2">
+        <button id="exportCsvBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+          Export CSV 📄
+        </button>
+
+        <button id="exportExcelBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+          Export Excel 📊
+        </button>
+      </div>
+
+      <table id="accessLogsTable" class="min-w-full bg-white border rounded-lg overflow-hidden shadow-xl">
+        <thead>
+          <tr class="bg-gray-700 text-white">
+            <th class="p-3 border-r border-gray-600">Timestamp</th>
+            <th class="p-3 border-r border-gray-600">User/Visitor ID</th>
+            <th class="p-3 border-r border-gray-600">Action</th>
+            <th class="p-3">Log Type</th>
+          </tr>
+
+          <!-- Filter Row -->
+          <tr class="bg-gray-100 border-b border-gray-300">
+            <th class="p-1 border-r border-gray-300">
+              <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter Timestamp..." />
+            </th>
+            <th class="p-1 border-r border-gray-300">
+              <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter ID..." />
+            </th>
+            <th class="p-1 border-r border-gray-300">
+              <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter Action..." />
+            </th>
+            <th class="p-1">
+              <input type="text" class="filterInput w-full p-1 text-sm border rounded" placeholder="Filter Type..." />
+            </th>
+          </tr>
+        </thead>
+
+        <tbody id="logsTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Visitor Approvals -->
+    <div id="visitorApprovals" class="securityTabContent hidden">
+      <h2 class="text-2xl font-bold mb-4">Visitor Approvals</h2>
+      <div id="visitorRequestList" class="space-y-2"></div>
+    </div>
+
+    <!-- Manual Gate Control -->
+    <div id="manualGate" class="securityTabContent hidden">
+      <h2 class="text-2xl font-bold mb-4">Manual Gate Control</h2>
+
+      <input type="text" id="gateResidentId" placeholder="Resident ID" class="border p-2 rounded mb-2 w-full max-w-sm">
+      <input type="text" id="gateVisitorId" placeholder="Visitor ID (optional)" class="border p-2 rounded mb-2 w-full max-w-sm">
+
+      <button id="openGateBtn" class="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700">
+        Open Gate
+      </button>
+
+      <div id="gateStatus" class="mt-4"></div>
+    </div>
+
+    <!-- Reports & Analysis -->
+    <div id="reportsAnalysis" class="securityTabContent hidden">
+      <h2 class="text-2xl font-bold mb-4">Reports & Analysis</h2>
+
+      <canvas id="dailyAccessChart" class="mb-6"></canvas>
+      <canvas id="monthlyAccessChart"></canvas>
+    </div>
+
+  </main>
+</div>

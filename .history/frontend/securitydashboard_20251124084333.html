@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Dashboard | Level 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-green-600 text-white p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Security Dashboard (Level 2)</h1>
+    <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600">Logout</button>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white min-h-screen p-4">
+      <nav class="flex flex-col space-y-2">
+        <button class="tabBtn sidebarBtn p-2 rounded hover:bg-gray-700" data-tab="accessLogs" data-target="sections/accesslogs.html">Access Logs</button>
+        <button class="tabBtn sidebarBtn p-2 rounded hover:bg-gray-700" data-tab="visitorApprovals" data-target="sections/visitorsaccess.html">Visitor Approvals</button>
+        <button class="tabBtn sidebarBtn p-2 rounded hover:bg-gray-700" data-tab="manualGate" data-target="sections/gate_overrides.html">Manual Gate Control</button>
+        <button class="tabBtn sidebarBtn p-2 rounded hover:bg-gray-700" data-tab="reportsAnalysis" data-target="sections/reports.html">Reports & Analysis</button>
+        <!-- New Visitor Access Tab -->
+        <button class="sidebarBtn p-2 rounded hover:bg-gray-700" data-target="sections/visitoraccess.html">Visitor Access</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content-area" class="flex-1 p-6">
+      <!-- Default content -->
+      <div>Loading dashboard...</div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/header-loader.js"></script>
+  <script src="js/securitydashboard.js"></script>
+</body>
+</html>

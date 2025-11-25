@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Dashboard (Sub-Sidebar)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-transparent min-h-screen">
+
+<div class="flex">
+
+  <!-- ░░ SUB-SIDEBAR (INSIDE ADMIN DASHBOARD) ░░ -->
+  <aside class="w-64 bg-gray-800 text-white p-4 min-h-full rounded-xl shadow-lg">
+
+    <h2 class="text-lg font-bold mb-4 border-b pb-2">Security Dashboard</h2>
+
+    <nav class="flex flex-col space-y-2">
+
+      <button 
+        class="sidebarBtn p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-left"
+        data-target="sections/securitydashboards/accesslogs.html">
+        Access Logs
+      </button>
+
+      <button 
+        class="sidebarBtn p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-left"
+        data-target="sections/securitydashboards/visitorApprovals.html">
+        Visitor Approvals
+      </button>
+
+      <button 
+        class="sidebarBtn p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-left"
+        data-target="sections/securitydashboards/manualGate.html">
+        Manual Gate Control
+      </button>
+
+      <button 
+        class="sidebarBtn p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-left"
+        data-target="sections/securitydashboards/reportsAnalysis.html">
+        Reports & Analysis
+      </button>
+
+    </nav>
+  </aside>
+
+  <!-- ░░ CONTENT AREA ░░ -->
+  <main class="flex-1 p-6">
+    <div id="security-content-area" class="text-gray-700">
+      <p class="italic text-gray-400">Select an option from the Security Sidebar...</p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+/*  
+   THIS SCRIPT MAKES THE SECURITY SUB-SIDEBAR WORK  
+   Without interfering with main admin sidebar
+*/
+
+document.addEventListener("click", async function (e) {
+  if (!e.target.classList.contains("sidebarBtn")) return;
+
+  const target = e.target.getAttribute("data-target");
+  const contentArea = document.querySelector("#security-content-area");
+
+  if (!contentArea) return;
+
+  try {
+    const response = await fetch(target);
+    if (!response.ok) throw new Error("Failed loading: " + target);
+
+    const html = await response.text();
+    contentArea.innerHTML = html;
+
+  } catch (err) {
+    contentArea.innerHTML = `
+      <p class='text-red-600 font-semibold'>Error loading section: ${target}</p>
+    `;
+  }
+});
+</script>
+
+</body>
+</html>

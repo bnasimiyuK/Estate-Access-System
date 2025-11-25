@@ -1,0 +1,348 @@
+// js/securitydashboard.js
+
+// ========================
+// GLOBAL SETTINGS
+// ========================
+const API_HOST = "http://localhost:4050";
+const token = localStorage.getItem("token");
+
+// Store the currently loaded logs for export and local filtering purposes
+let currentAccessLogs = [];
+
+// 🟢 FIX APPLIED: Helper function to safely convert null/undefined to string '—'
+const safeString = (value) => String(value ?? '—');
+
+// ========================
+// NEW TAB SWITCHING FUNCTIONS
+// ========================
+
+// Fetches and loads the content of visitorsaccess.html
+async function loadVisitorsAccessForm() {
+    const targetElement = document.getElementById('visitorRequestList');
+    targetElement.innerHTML = '<p class="text-gray-500">Loading visitor access form...</p>';
+    
+    try {
+        const response = await fetch('visitorsaccess.html'); // Ensure this path is correct
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const htmlContent = await response.text();
+        
+        // Inject the fetched HTML content
+        targetElement.innerHTML = htmlContent;
+        
+        // IMPORTANT NOTE: If visitorsaccess.html contains <script> tags for 
+        // form submission or validation, they will NOT automatically execute. 
+        // That logic must be moved to securitydashboard.js or manually loaded.
+
+    } catch (error) {
+        console.error('Error loading external HTML content:', error);
+        targetElement.innerHTML = `<p class="text-red-600">Failed to load visitor form.</p>`;
+    }
+}
+
+// Central function to handle tab clicks and load specific content
+function handleTabSwitch(tabId) {
+    const tabButtons = document.querySelectorAll(".tabBtn");
+    const tabContents = document.querySelectorAll(".tabContent");
+
+    // Hide all tabs
+    tabContents.forEach(tab => tab.classList.add("hidden"));
+    
+    // De-highlight all buttons
+    tabButtons.forEach(btn => btn.classList.remove('bg-gray-700', 'text-white'));
+
+    // Show selected tab content and highlight button
+    const selectedContent = document.getElementById(tabId);
+    if (selectedContent) {
+        selectedContent.classList.remove("hidden");
+    }
+    const selectedButton = document.querySelector(`.tabBtn[data-tab="${tabId}"]`);
+    if (selectedButton) {
+        selectedButton.classList.add('bg-gray-700', 'text-white');
+    }
+
+    // Special loading logic based on the tab ID
+    if (tabId === 'visitorApprovals') {
+        loadVisitorsAccessForm();
+    } else if (tabId === 'accessLogs') {
+        loadaccesslogs();
+    } else if (tabId === 'reportsAnalysis') {
+        loadCharts();
+    }
+    // ManualGate doesn't need data loading on switch.
+}
+
+
+// ========================
+// TAB SWITCHING (ENTRY POINT - AMENDED)
+// ========================
+document.addEventListener("DOMContentLoaded", () => {
+    const tabButtons = document.querySelectorAll(".tabBtn");
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            handleTabSwitch(btn.dataset.tab);
+        });
+    });
+
+    // 🔑 Determine initial tab to load (default to accessLogs)
+    const initialTabId = document.querySelector('.tabBtn')?.dataset.tab || 'accessLogs';
+    handleTabSwitch(initialTabId); // Load the default tab, which calls the necessary load function (e.g., loadaccesslogs())
+
+    // 🔑 Attach event listeners for Export and Filter inputs
+    document.getElementById("exportCsvBtn").addEventListener("click", exportToCsv);
+    document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
+
+    // Attach filter event listeners to the new inputs
+    const filterInputs = document.querySelectorAll('.filterInput');
+    filterInputs.forEach(input => {
+        // Use an array index to identify which column the input belongs to
+        input.dataset.columnIndex = Array.from(input.parentNode.parentNode.children).indexOf(input.parentNode);
+        input.addEventListener('keyup', applyInlineFilters);
+    });
+    
+    // NOTE: loadaccesslogs() and loadCharts() were removed here 
+    // because they are now called conditionally inside handleTabSwitch(initialTabId).
+});
+
+// ========================
+// ACCESS LOGS FUNCTIONALITY
+// ========================
+async function loadaccesslogs() {
+    try {
+        // Fetch data from the corrected endpoint /api/accesslogs/logs
+        const response = await fetch(`${API_HOST}/api/accesslogs/logs`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const logs = await response.json();
+        currentAccessLogs = logs; // 🔑 Store logs for export and filtering
+        renderaccesslogs(logs);
+
+    } catch (err) {
+        console.error("Access Log Error:", err);
+    }
+}
+
+function renderaccesslogs(logs) {
+    const tbody = document.getElementById("logsTableBody");
+    tbody.innerHTML = "";
+
+    logs.forEach(log => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td class="p-2 border">${new Date(log.TimestampUtc).toLocaleString()}</td>
+            <td class="p-2 border">${log.UserId || "—"}</td>
+            <td class="p-2 border">${log.Action}</td>
+            <td class="p-2 border">${log.LogType}</td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+// 🔑 Function to apply inline filters locally
+function applyInlineFilters() {
+    const filterInputs = document.querySelectorAll('.filterInput');
+    const filters = Array.from(filterInputs).map(input => input.value.toLowerCase());
+
+    const filteredLogs = currentAccessLogs.filter(log => {
+        // Prepare log values for comparison (order matches the table columns)
+        const logValues = [
+            new Date(log.TimestampUtc).toLocaleString().toLowerCase(),
+            (log.UserId || '—').toLowerCase(),
+            log.Action.toLowerCase(),
+            log.LogType.toLowerCase(),
+        ];
+
+        // Check if all filter values are present in their respective log columns
+        return filters.every((filterValue, index) => {
+            return !filterValue || logValues[index].includes(filterValue);
+        });
+    });
+
+    renderaccesslogs(filteredLogs);
+}
+
+// 🔑 Updated Function to export logs to CSV (Fixed TypeError)
+function exportToCsv() {
+    if (currentAccessLogs.length === 0) return alert("No logs to export.");
+
+    const headers = ["Timestamp (UTC)", "User/Visitor ID", "Action", "Log Type"];
+    
+    // Convert logs to CSV string
+    const csvContent = [
+        headers.join(','), // Header row
+        ...currentAccessLogs.map(log => 
+            // 🟢 FIX: Ensure values are strings before calling .replace()
+            [
+                `"${safeString(new Date(log.TimestampUtc).toLocaleString()).replace(/"/g, '""')}"`,
+                `"${safeString(log.UserId).replace(/"/g, '""')}"`,
+                `"${safeString(log.Action).replace(/"/g, '""')}"`,
+                `"${safeString(log.LogType).replace(/"/g, '""')}"`,
+            ].join(',')
+        )
+    ].join('\n');
+
+    // Create a Blob and download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "access_logs.csv";
+    link.click();
+}
+
+// 🔑 Updated Function to export logs to Excel (Fixed TypeError)
+function exportToExcel() {
+    if (currentAccessLogs.length === 0) return alert("No logs to export.");
+
+    const headers = ["Timestamp (UTC)", "User/Visitor ID", "Action", "Log Type"];
+    
+    const excelContent = [
+        headers.join('\t'), // Use tab delimiter for simple Excel compatibility
+        ...currentAccessLogs.map(log => 
+            [
+                // 🟢 FIX: Ensure values are strings
+                safeString(new Date(log.TimestampUtc).toLocaleString()),
+                safeString(log.UserId),
+                safeString(log.Action),
+                safeString(log.LogType),
+            ].join('\t')
+        )
+    ].join('\n');
+
+    // Use application/vnd.ms-excel to suggest opening in Excel
+    const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "access_logs.xls"; // Using .xls for compatibility suggestion
+    link.click();
+}
+
+
+// ========================
+// LOAD VISITOR REQUESTS (BACKEND) - KEPT FOR REFERENCE/MANUAL CALLS
+// ========================
+async function loadVisitorRequests() {
+    try {
+        // Path corrected in previous step: /api/visitorsaccess/requests
+        const response = await fetch(`${API_HOST}/api/visitorsaccess/requests`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const visitors = await response.json();
+        renderVisitorRequests(visitors);
+
+    } catch (err) {
+        // 🛑 NOTE: This 403 error must be fixed on the server (check JWT validity/permissions).
+        console.error("Visitor Requests Error:", err);
+    }
+}
+
+function renderVisitorRequests(visitors) {
+    const container = document.getElementById("visitorRequestList");
+    container.innerHTML = "";
+    
+    // NOTE: This function is superseded by loadVisitorsAccessForm when the tab is first clicked.
+
+    visitors.forEach(req => {
+        const div = document.createElement("div");
+        div.className = "p-2 border rounded flex justify-between items-center bg-white";
+
+        div.innerHTML = `
+            <span>${req.VisitorName} (ID: ${req.VisitorID}) → Resident ${req.ResidentID}</span>
+            <div>
+                <button class="approveBtn bg-green-600 text-white px-2 py-1 rounded mr-2">Approve</button>
+                <button class="rejectBtn bg-red-600 text-white px-2 py-1 rounded">Reject</button>
+            </div>
+        `;
+
+        // Approve
+        div.querySelector(".approveBtn").addEventListener("click", async () => {
+            try {
+                const res = await fetch(`${API_HOST}/api/visitorsaccess/${req.VisitorID}/approve`, {
+                    method: "PUT",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+                loadVisitorRequests();
+                loadaccesslogs();
+            } catch (err) {
+                console.error("Approve Error:", err);
+            }
+        });
+
+        // Reject
+        div.querySelector(".rejectBtn").addEventListener("click", async () => {
+            try {
+                const res = await fetch(`${API_HOST}/api/visitorsaccess/${req.VisitorID}/reject`, {
+                    method: "PUT",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+                loadVisitorRequests();
+                loadaccesslogs();
+            } catch (err) {
+                console.error("Reject Error:", err);
+            }
+        });
+
+        container.appendChild(div);
+    });
+}
+
+// ========================
+// MANUAL GATE CONTROL
+// ========================
+document.getElementById("openGateBtn").addEventListener("click", async () => {
+    const residentId = document.getElementById("gateResidentId").value;
+    const visitorId = document.getElementById("gateVisitorId").value;
+
+    const target = visitorId || residentId;
+    document.getElementById("gateStatus").innerText = `Gate manually opened for ${target}`;
+
+    try {
+        const response = await fetch(`${API_HOST}/api/access/manual-open`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ residentId, visitorId })
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        loadaccesslogs();
+    } catch (err) {
+        console.error("Manual Gate Error:", err);
+    }
+});
+
+// ========================
+// CHARTS
+// ========================
+function loadCharts() {
+    const dailyCtx = document.getElementById("dailyAccessChart").getContext("2d");
+    new Chart(dailyCtx, {
+        type: "bar",
+        data: {
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            datasets: [{ label: "Daily Access", data: [5, 7, 3, 6, 8, 4, 2] }]
+        }
+    });
+
+    const monthlyCtx = document.getElementById("monthlyAccessChart").getContext("2d");
+    new Chart(monthlyCtx, {
+        type: "line",
+        data: {
+            labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+            datasets: [{ label: "Monthly Access", data: [120,140,110,150,165,180,190,160,140,150,170,180] }]
+        }
+    });
+}

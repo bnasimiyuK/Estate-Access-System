@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1763675700394,
@@ -28,6 +28,14 @@
                 {
                     "date": 1763697957346,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\r\n import sql from \"mssql\";\r\n import { dbConfig } from \"../db.js\";\r\n-import { verifyToken, isAdmin } from \"../middleware/authMiddleware.js\";\r\n+import { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\r\n const router = express.Router();\r\n \r\n /* -------------------------------------------\r\n    1️⃣ DASHBOARD SUMMARY API\r\n@@ -51,6 +51,6 @@\n     console.error(\"Access Chart API Error:\", err);\r\n     res.status(500).json({ message: \"Server error\", error: err.message });\r\n   }\r\n });\r\n-router.get(\"/summary\", verifyToken, isAdmin, getDashboardSummary);\r\n+router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n export default router;\r\n"
+                },
+                {
+                    "date": 1764013001100,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,9 @@\n import express from \"express\";\r\n import sql from \"mssql\";\r\n import { dbConfig } from \"../db.js\";\r\n import { authenticateJWT, isAdmin } from \"../middleware/authMiddleware.js\";\r\n+import { getDashboardSummary, getAccessChart } from \"../controllers/dashboardController.js\";\r\n const router = express.Router();\r\n \r\n /* -------------------------------------------\r\n    1️⃣ DASHBOARD SUMMARY API\r\n@@ -53,4 +54,6 @@\n   }\r\n });\r\n router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n export default router;\r\n+router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n+router.get(\"/accesschart\", authenticateJWT, isAdmin, getAccessChartData);\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1764013011815,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,5 +55,5 @@\n });\r\n router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n export default router;\r\n router.get(\"/summary\", authenticateJWT, isAdmin, getDashboardSummary);\r\n-router.get(\"/accesschart\", authenticateJWT, isAdmin, getAccessChartData);\n\\ No newline at end of file\n+router.get(\"/accesschart\", authenticateJWT, isAdmin, getAccessChart);\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1763675700394,
